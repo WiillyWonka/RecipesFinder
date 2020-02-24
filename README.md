@@ -5,7 +5,7 @@ Special icons make choice easier - it will be clear which dishes are suitable fo
 Also some recipes will be support with video or photos to simplify process of cooking.
 
 ## About analogues
-[https://play.google.com/store/apps/details?id=com.ggl.jr.cookbooksearchbyingredients&showAllReviews=true]  [Apps for searching recipes]
+[Apps for searching recipes][https://play.google.com/store/apps/details?id=com.ggl.jr.cookbooksearchbyingredients&showAllReviews=true]
 are not optimal in searching recipes since a few recipes are offered, so many ingredients are necessary to buy additionally.
 Also it is impossible to choose category of dishes - for example, without meat or from certain cuisine.
 
@@ -18,8 +18,8 @@ Also it is impossible to choose category of dishes - for example, without meat o
 * Commit contains one completed change
 
 # Team of project
-- [Gustomyasov Evgeniy]  [https://github.com/YudzhinNSK]
-- [Zubkova Daria]  [https://github.com/DariaZubkova]
-- [Kuzin Andrew]  [https://github.com/Kexon5]
-- [Krupkina Daria]  [https://github.com/DariaKrup]
-- [Rizhenko Viktor]  [https://github.com/WiillyWonka]
+-[Gustomyasov Evgeniy] [https://github.com/YudzhinNSK]
+-[Zubkova Daria] [https://github.com/DariaZubkova]
+-[Kuzin Andrew] [https://github.com/Kexon5]
+-[Krupkina Daria] [https://github.com/DariaKrup]
+-[Rizhenko Viktor] [https://github.com/WiillyWonka]
