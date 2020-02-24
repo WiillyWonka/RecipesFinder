@@ -18,8 +18,8 @@ Also it is impossible to choose category of dishes - for example, without meat o
 * Commit contains one completed change
 
 # Team of project
--[Gustomyasov Evgeniy] [https://github.com/YudzhinNSK]
--[Zubkova Daria] [https://github.com/DariaZubkova]
--[Kuzin Andrew] [https://github.com/Kexon5]
--[Krupkina Daria] [https://github.com/DariaKrup]
--[Rizhenko Viktor] [https://github.com/WiillyWonka]
+- [Gustomyasov Evgeniy][https://github.com/YudzhinNSK]
+- [Zubkova Daria][https://github.com/DariaZubkova]
+- [Kuzin Andrew][https://github.com/Kexon5]
+- [Krupkina Daria][https://github.com/DariaKrup]
+- [Rizhenko Viktor][https://github.com/WiillyWonka]
