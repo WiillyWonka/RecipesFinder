@@ -6,13 +6,13 @@ This is our Java coding standard.
 File names, packages:
 * Use only lowercase letters in package names
 
-  For example: `package company.com.project; NOT ~~package Company.Com.Project;~~`
+  For example: `package company.com.project; NOT ~~package~~ ~~Company.Com.Project;~~`
 * The first letters of all words in class names are uppercase
 
   For example: `public class MyFirstClass`
 * Class names must be nouns
 
-  For example: `public class MyFirstClass; NOT ~~public class AddPlus~~`
+  For example: `public class MyFirstClass; NOT ~~public~~ ~~class~~ ~~AddPlus~~`
 
 Method and variable names
 * The first letter must be lowercase in the name of the methods, and the first letters of inner words - uppercase letters
@@ -32,7 +32,8 @@ Indentation, line breaks
   * Use indent two tabulation to indicate nesting
   
   For example: 
-  ```int result = function1(firstOperator,
+  ```
+     int result = function1(firstOperator,
          function2(secondOperator,
          thirdOperator);`
 * Use indent tabulation
@@ -41,7 +42,8 @@ Arrangement of brackets, operators, blocks
 * The definition of variables must be placed at the beginning of the block
 
   For example: 
-  ```void method() {
+  ```
+     void method() {
          int result = 0;
          int i = 0;
          ...
@@ -68,7 +70,8 @@ Arrangement of brackets, operators, blocks
 * The closing bracket } is aligned with the start line of this block and is located on a new line
 
   For example: 
-  ```void method() {
+  ```
+     void method() {
          for (int i = 0; i < N; i++) {
          ...
          }
@@ -77,13 +80,14 @@ Arrangement of brackets, operators, blocks
 * There is only one statement on the line
 
   For example: 
-  ```if (a < b) {
+  ```
+     if (a < b) {
          return a;
      }`
 
 Code structuring
 * Methods should be short and with comments
 * Lack of magic numbers
-  For example: `NOT ~~if ( a > 10)~~`
+  For example: `NOT ~~if~~ ~~(~~ ~~a~~ ~~>~~ ~~10)~~`
 
 Such rules are accepted in our team.
