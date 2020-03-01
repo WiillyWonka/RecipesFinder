@@ -14,17 +14,17 @@ Method and Variable Names
 Indentation, line breaks
 * The line doesn’t exceed 80 characters
 * If it exceeds, then you need to break it into several lines:
-** Transfer after a comma and before the operator
-** Use indent two tabulation to indicate nesting
+  * Transfer after a comma and before the operator
+  * Use indent two tabulation to indicate nesting
 * Use indent tabulation
 
 Arrangement of brackets, operators, blocks
 * The definition of variables must be placed at the beginning of the block
 * There is no space between the method name and the brackets for the parameters
 * Space separated:
-** Function parameters
-** Operators
-** Keyword (if, while, for) and the next bracket
+  * Function parameters
+  * Operators
+  * Keyword (if, while, for) and the next bracket
 * Opening bracket { doesn’t fit on a separate line
 * The closing bracket } is aligned with the start line of this block and is located on a new line
 * Methods are separated by an empty string
