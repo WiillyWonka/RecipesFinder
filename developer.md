@@ -6,7 +6,7 @@ This is our Java coding standard.
 File names, packages:
 * Use only lowercase letters in package names
 
-  For example: `package company.com.project; NOT package Company.Com.Project;`
+  For example: `package company.com.project;`
 * The first letters of all words in class names are uppercase
 
   For example: `public class MyFirstClass`
@@ -88,6 +88,6 @@ Arrangement of brackets, operators, blocks
 Code structuring
 * Methods should be short and with comments
 * Lack of magic numbers
-  For example: `NOT if ( a > 10)`
+  For example: `Don't use: if ( a > 10)`
 
 Such rules are accepted in our team.
