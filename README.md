@@ -1,8 +1,8 @@
 # RecipesFinder
-Perfect Android app for people who usually have problems with choice what they are going to cook.
-Everything is simple - you just need to mention goods you have in your fridge from list and them decide on appropriate recipe. 
-Special icons make choice easier - it will be clear which dishes are suitable for vegetarians, which for people keen on spicy ingredients, etc.
-Also some recipes will be support with video or photos to simplify process of cooking.
+Perfect Android app for people who usually have problems with the choice of what they are going to cook.
+Everything is simple - you just need to mark goods you have in your fridge in the list and then decide on appropriate recipe. 
+Special icons make choice easier - it will be clear which dishes are suitable for vegetarians, which are for people keen on spicy ingredients, etc.
+Also some recipes will be supported with video or photos to simplify process of cooking.
 
 ## About analogues
 [Apps for searching recipes](https://play.google.com/store/apps/details?id=com.ggl.jr.cookbooksearchbyingredients&showAllReviews=true)
