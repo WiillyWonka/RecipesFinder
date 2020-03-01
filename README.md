@@ -30,7 +30,7 @@ Also it is impossible to choose category of dishes - for example, without meat o
 * Commit contains one completed change
 * If number of letters is bigger then 50 than you should add empty string after main commit. After empty string it's body and before empty string it's title 
  
-    The example, how to use commit rules: 
+    ```The example, how to use commit rules: 
      "#9 add parsing recipes site recipes_from_site.json
  
      Final file save in google disk. This site is parsed the whole. You need to remember to attach a link to the source"
