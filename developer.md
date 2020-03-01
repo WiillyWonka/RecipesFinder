@@ -6,13 +6,13 @@ This is our Java coding standard.
 File names, packages:
 * Use only lowercase letters in package names
 
-  For example: `package company.com.project; NOT package Company.Com.Project;`
+  For example: `package company.com.project; **NOT** package Company.Com.Project;`
 * The first letters of all words in class names are uppercase
 
   For example: `public class MyFirstClass`
 * Class names must be nouns
 
-  For example: `public class MyFirstClass; NOT public class AddPlus`
+  For example: `public class MyFirstClass;`
 
 Method and variable names
 * The first letter must be lowercase in the name of the methods, and the first letters of inner words - uppercase letters
@@ -35,7 +35,7 @@ Indentation, line breaks
   ```
      int result = function1(firstOperator,
          function2(secondOperator,
-         thirdOperator);`
+         thirdOperator);
 * Use indent tabulation
 
 Arrangement of brackets, operators, blocks
@@ -50,7 +50,7 @@ Arrangement of brackets, operators, blocks
          for (i = 0; i < N; i++) {
          ...
          }
-     }`
+     }
 * There is no space between the method name and the brackets for the parameters
 
   For example: `void add(int firstNumber)`
@@ -75,7 +75,7 @@ Arrangement of brackets, operators, blocks
          for (int i = 0; i < N; i++) {
          ...
          }
-     }`
+     }
 * Methods are separated by an empty string
 * There is only one statement on the line
 
@@ -83,11 +83,11 @@ Arrangement of brackets, operators, blocks
   ```
      if (a < b) {
          return a;
-     }`
+     }
 
 Code structuring
 * Methods should be short and with comments
 * Lack of magic numbers
-  For example: `NOT if ( a > 10)`
+  For example: `**NOT** if ( a > 10)`
 
 Such rules are accepted in our team.
