@@ -1,12 +1,12 @@
 This is our Java coding standard.
 
 
-File Names, Packages:
+File names, packages:
 * Use only lowercase letters in package names
 * The first letters of all words in class names are uppercase
 * Class names must be nouns
 
-Method and Variable Names
+Method and variable names
 * The first letter must be lowercase in the name of the methods, and the first letters of inner words - uppercase letters
 * Variable names begin with a lowercase letter, and the first letters of inner words - uppercase letters
 * All letters are uppercase in the names of constants, the words are separated by lower underscores
@@ -30,7 +30,7 @@ Arrangement of brackets, operators, blocks
 * Methods are separated by an empty string
 * There is only one statement on the line
 
-Code Structuring
+Code structuring
 * Methods should be short and with comments
 * Lack of magic numbers
 
