@@ -36,8 +36,6 @@ For example: `"add function", not "add function."`
  
     Final file save in google disk. This site is parsed the whole. 
     You need to remember to attach a link to the source"
-
-
 # Team of project
 - [Gustomyasov Evgeniy](https://github.com/YudzhinNSK)
 - [Zubkova Daria](https://github.com/DariaZubkova)
