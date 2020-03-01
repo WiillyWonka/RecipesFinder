@@ -17,7 +17,7 @@ Also it is impossible to choose category of dishes - for example, without meat o
 * Must write number of issue (#number) you commit at first place 
  
 For example: `"#12 update commit rules README.md"`
-* Use the present simpe tense, imperative 
+* Use the present simple tense, imperative 
  
 For example: `"add", not "added", "adds"`
 * Write first word with a small letter 
