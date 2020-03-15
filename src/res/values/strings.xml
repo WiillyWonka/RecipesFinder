@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Recepies Finder</string>
+    <string name="Find">Найти!</string>
+    <string name="Help">Помощь</string>
+    <string name="Settings">Настройки</string>
+    <string name="AddIngr">Добавить ингредиент</string>
+    <string name="AddRec">Все рецепты</string>
+    <string name="MainMsg">Пожалуйста, добавьте ингредиент, чтобы найти возможный рецепт или выберите рецепт из списка.</string>
+    <string name="first">first</string>
+    <string name="Menu">Меню</string>
+    <string name="ChangeBolt">Поменять шрифт</string>
+    <string name="ChangeBackGr">Поменять фон</string>
+    <string name="ChangeTheme">Поменять тему</string>
+</resources>
