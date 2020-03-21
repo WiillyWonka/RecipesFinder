@@ -1,3 +1,4 @@
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -25,6 +26,7 @@ public class SQLite_class {
 
         statement.executeUpdate("CREATE TABLE  IF NOT EXISTS 'dishes' ("
                 + " 'dish_id'         INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + " 'dish_photo' TEXT NOT NULL,"
                 + " 'dish_name'       TEXT NOT NULL,"
                 + " 'dish_steps' TEXT NOT NULL,"
                 + " 'category_id'    INTEGER"
@@ -63,13 +65,14 @@ public class SQLite_class {
 
     public void addDishes(List<parsing.Recipes_category> list_of_recipes) throws SQLException{
         PreparedStatement insertStmt = connection.prepareStatement(
-                "INSERT INTO dishes(dish_name, dish_steps, category_id) VALUES(?, ?, ?)");
+                "INSERT INTO dishes(dish_name, dish_photo, dish_steps, category_id) VALUES(?, ?, ?, ?)");
         int quan_of_categories = list_of_recipes.size();
         for (int i = 0; i < quan_of_categories; i++){
-            int category_id = i;
+            int category_id = i + 1;
             int quan_of_recipes = list_of_recipes.get(i).recipes_name.size();
             for (int j = 0; j < quan_of_recipes; j++){
                 String dish_name = list_of_recipes.get(i).recipes_name.get(j).name;
+                URL dish_photo = list_of_recipes.get(i).recipes_name.get(j).url;
                 String dish_steps = "";
                 int quan_of_steps = list_of_recipes.get(i).recipes_name.get(j).steps_of_cooking.size();
                 for (int k = 0; k < quan_of_steps; k++){
@@ -77,8 +80,9 @@ public class SQLite_class {
                     dish_steps += dish_add;
                 }
                 insertStmt.setString(1, dish_name);
-                insertStmt.setString(2, dish_steps);
-                insertStmt.setInt(3, category_id);
+                insertStmt.setString(2, dish_photo.toString());
+                insertStmt.setString(3, dish_steps);
+                insertStmt.setInt(4, category_id);
                 insertStmt.executeUpdate();
             }
         }
@@ -116,11 +120,11 @@ public class SQLite_class {
         for (int i = 0; i < quan_of_categories; i++) {
             int quan_of_recipes = list_of_recipes.get(i).recipes_name.size();
             for (int j = 0; j < quan_of_recipes; j++) {
-                int dish_id = j + previous_quan;
+                int dish_id = j + previous_quan + 1;
                 int quan_of_ingr = list_of_recipes.get(i).recipes_name.get(j).indredients.size();
                 for (int k = 0; k < quan_of_ingr; k++) {
                     String ingr = list_of_recipes.get(i).recipes_name.get(j).indredients.get(k).name;
-                    int ingr_id = all_ingredients.indexOf(ingr);
+                    int ingr_id = all_ingredients.indexOf(ingr) + 1;
                     insertStmt.setInt(1, ingr_id);
                     insertStmt.setInt(2, dish_id);
                     insertStmt.executeUpdate();
