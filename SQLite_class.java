@@ -72,7 +72,7 @@ public class SQLite_class {
             int quan_of_recipes = list_of_recipes.get(i).recipes_name.size();
             for (int j = 0; j < quan_of_recipes; j++){
                 String dish_name = list_of_recipes.get(i).recipes_name.get(j).name;
-                URL dish_photo = list_of_recipes.get(i).recipes_name.get(j).url;
+                URL dish_photo = list_of_recipes.get(i).recipes_name.get(j).photo;
                 String dish_steps = "";
                 int quan_of_steps = list_of_recipes.get(i).recipes_name.get(j).steps_of_cooking.size();
                 for (int k = 0; k < quan_of_steps; k++){

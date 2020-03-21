@@ -24,6 +24,7 @@ public class parsing {
         public URL url;
         public List<Ingredients> indredients;
         public List<Step_of_cooking> steps_of_cooking;
+        public URL photo;
     }
     static class Ingredients{
         public String name;
@@ -36,7 +37,7 @@ public class parsing {
     {
         Gson g = new Gson();
         Type type = new TypeToken<List<Recipes_category>>(){}.getType();
-        String text = new String(Files.readAllBytes(Paths.get("recipes_from_site.json")), StandardCharsets.UTF_8);
+        String text = new String(Files.readAllBytes(Paths.get("all_recipes.json")), StandardCharsets.UTF_8);
         List<Recipes_category> myMap = g.fromJson(text, type);
         return myMap;
     }
