@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Vector;
+
 public class SQLite_class {
     private static Connection connection;
     private  ArrayList<String> all_ingredients;
@@ -29,7 +31,8 @@ public class SQLite_class {
                 + " 'dish_photo' TEXT NOT NULL,"
                 + " 'dish_name'       TEXT NOT NULL,"
                 + " 'dish_steps' TEXT NOT NULL,"
-                + " 'category_id'    INTEGER"
+                + " 'category_id' INTEGER,"
+                + "  FOREIGN KEY (category_id) REFERENCES categories (category_id)"
                 + ");");
 
         statement.executeUpdate("CREATE TABLE  IF NOT EXISTS 'ingredients' ("
@@ -40,7 +43,9 @@ public class SQLite_class {
 
         statement.executeUpdate("CREATE TABLE  IF NOT EXISTS 'ingredients_matching' ("
                 + " 'ingredient_id'       INTEGER,"
-                + " 'dish_id'       INTEGER"
+                + " 'dish_id'       INTEGER,"
+                + "  FOREIGN KEY (dish_id) REFERENCES dishes (dish_id),"
+                + "  FOREIGN KEY (ingredient_id) REFERENCES ingredients (ingredient_id)"
                 + ");");
     }
 
@@ -122,9 +127,13 @@ public class SQLite_class {
             for (int j = 0; j < quan_of_recipes; j++) {
                 int dish_id = j + previous_quan + 1;
                 int quan_of_ingr = list_of_recipes.get(i).recipes_name.get(j).indredients.size();
+                ArrayList<String> all_ingr = new ArrayList<String>();
                 for (int k = 0; k < quan_of_ingr; k++) {
                     String ingr = list_of_recipes.get(i).recipes_name.get(j).indredients.get(k).name;
+                    if (all_ingr.contains(ingr))
+                        continue;
                     int ingr_id = all_ingredients.indexOf(ingr) + 1;
+                    all_ingr.add(ingr);
                     insertStmt.setInt(1, ingr_id);
                     insertStmt.setInt(2, dish_id);
                     insertStmt.executeUpdate();
