@@ -7,5 +7,31 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="MyStyle" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@color/my_colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/my_colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/my_colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/my_colorSecondaryVariant</item>
+        <item name="colorPrimaryDark">@color/textPrimaryColor</item>
+        <item name="android:textColor">@color/textPrimaryColor</item>
+        <item name="android:popupMenuStyle">@style/myActionBar</item>
+        <item name="shapeAppearanceSmallComponent">@style/myShapeTest</item>
+        <!--
+        <item name="android:textColorPrimary">@color/my_textColorPrimary</item>
+        <item name="android:windowBackground">@color/my_colorPrimary</item>
+        <item name="colorControlActivated">@color/colorAccent</item>-->
+    </style>
 
+    <style name="myShapeTest" parent = "ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerFamilyBottomLeft">cut</item>
+        <item name="cornerSizeTopRight">12dp</item>
+        <item name="cornerSizeBottomLeft">12dp</item>
+    </style>
+
+    <style name="myActionBar" parent="android:Widget.Holo.Light.ActionBar">
+        <item name="android:dropDownSelector">@color/my_colorSecondary</item>
+        <item name="android:popupBackground">@color/my_colorSecondaryVariant</item>
+
+    </style>
 </resources>
