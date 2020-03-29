@@ -7,7 +7,7 @@ The version of Android Oreo is used.
 
 * Install Android Studio, since this application was developed in this environment
 * Set up an emulator, or a real device with Android OS to test the code
-* Download the sources of this application
+* Do git clone this application
 * Download the database with all the recipes that are in this application
 * Open the project and get started
 
@@ -20,6 +20,6 @@ The version of Android Oreo is used.
 
 * Установить Android Studio, так как данное приложение разрабатывалось в этой среде
 * Настроить эмулятор, либо реальное устройство с OC Android для тестирования кода
-* Скачать исходники данного приложения
+* Сделать git clone данного приложения
 * Скачать базу данных со всеми рецептами, которые есть в данном приложении
 * Открыть проект и начать работу
