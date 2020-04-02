@@ -1,11 +1,16 @@
-package com.recipesfinder;
+package com.example.recepiesfinder;
 
-public class Dish {
+import java.io.Serializable;
+
+public class Dish implements Serializable {
     private String name;
     private String ingredients;
     private String picture; //TODO: fix picture
     private String category;
-    private String steps;
+
+
+    private String[] steps;
+    private int count_steps;
 
     public Dish(String name_, String ingredients_,
                 String picture_, String category_, String steps_) {
@@ -13,7 +18,9 @@ public class Dish {
         ingredients = ingredients_;
         picture = picture_;
         category = category_;
-        steps = steps_;
+
+        steps = steps_.split("\n");
+        count_steps = steps.length;
     }
 
     public String getName() {
@@ -31,8 +38,11 @@ public class Dish {
     public String getIngredients() {
         return ingredients;
     }
-
-    public String getSteps() {
+    public String[] getSteps() {
         return steps;
+    }
+
+    public int getCount_steps(){
+        return count_steps;
     }
 }
