@@ -1,39 +1,81 @@
 package com.example.recepiesfinder;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class Recipe extends AppCompatActivity implements View.OnClickListener {
+import com.bumptech.glide.Glide;
+
+
+public class Recipe extends AppCompatActivity implements View.OnClickListener{
     Button MenuBt;
-    TextView textView;
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
-        textView = (TextView)findViewById(R.id.Recipe_text);
-        textView.setMovementMethod(new ScrollingMovementMethod());
-        MenuBt = (Button) findViewById(R.id.Menu);
-        //ListView listView = (ListView) findViewById(R.id.RecipeGinnes);
 
-        // String[] instruction = getResources().getStringArray(R.array.Guines);
-
-        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,instruction);
-
-        //listView.setAdapter(adapter);
+        MenuBt = (Button)findViewById(R.id.Menu);
         MenuBt.setOnClickListener(this);
+        Bundle argum = getIntent().getExtras();
+        Dish dish = null;
+        if(argum!=null){
+            dish = (Dish) argum.getSerializable(Dish.class.getSimpleName());
+        }
+
+        String[] text = dish.getSteps();
+        int count = dish.getCount_steps();
+
+        Button name_rec = findViewById(R.id.NameRecipe);
+        name_rec.setText(dish.getName());
+
+        ScrollView scrollView = findViewById(R.id.main_scroll);
+        LinearLayout linearLayout = findViewById(R.id.MainL);
+        ImageView imageView = findViewById(R.id.Recipe_image);
+
+        System.out.println(dish.getPicture());
+
+        Glide.with(Recipe.this)
+                .load(dish.getPicture())
+                .placeholder(R.drawable.ic_logo1)
+                .error(R.drawable.ic_logo1)
+                .into(imageView);
+
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        ViewGroup.LayoutParams lp1 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,100);
+
+        for(int i = 0; i<count;i++) {
+            TextView tv = new TextView(this);
+            tv.setText("\n" + text[i] + "\n");
+            tv.setLayoutParams(lp);
+            tv.setTextSize(17);
+            linearLayout.addView(tv);
+            if (i != count-1) {
+                Button bt = new Button(this);
+                bt.setBackgroundResource(R.drawable.button_border);
+                bt.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
+                bt.setGravity(1);
+                bt.setTextSize(14);
+                int c = i + 1;
+                bt.setText("Шаг " + c);
+                bt.setLayoutParams(lp1);
+                linearLayout.addView(bt);
+            }
+        }
     }
 
     @Override
@@ -63,8 +105,8 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Menu:
-                Intent intent1 = new Intent(this, MainActivity.class);
-                startActivity(intent1);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
         }
     }
