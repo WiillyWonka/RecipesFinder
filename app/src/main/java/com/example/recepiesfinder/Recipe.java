@@ -64,7 +64,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
             tv.setLayoutParams(lp);
             tv.setTextSize(17);
             linearLayout.addView(tv);
-            if (i != count-1) {
+            if (i < count-2) {
                 Button bt = new Button(this);
                 bt.setBackgroundResource(R.drawable.button_border);
                 bt.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
