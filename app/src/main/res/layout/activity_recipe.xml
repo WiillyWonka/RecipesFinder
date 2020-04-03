@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Recipe">
+    tools:context=".AllRecipes">
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:alpha="0.25"
+        android:alpha="0.10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -19,14 +19,13 @@
         app:srcCompat="@drawable/ic_logo1" />
 
     <ScrollView
+        android:id="@+id/main_scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/NameRecipe"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout5">
-
-
         <LinearLayout
             android:id="@+id/MainL"
             android:layout_width="match_parent"
@@ -34,37 +33,11 @@
             android:orientation="vertical"
             android:scrollbars="vertical">
             <ImageView
+                android:id="@+id/Recipe_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:src="@drawable/ic_test_recipe_picture"
                 />
-            <TextView
-                android:id="@+id/Recipe_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical"
-                android:text="@string/Gines"
-                android:textColor="@android:color/black"
-                android:textSize="17sp" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/Step1"
-                android:textColor="@android:color/white"
-                android:background="@drawable/button_border"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:src="@drawable/ic_step1"
-                />
-            <TextView
-                android:id="@+id/Step1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical"
-                android:text="@string/SStep1"
-                android:textColor="@android:color/black"
-                android:textSize="17sp" />
+
         </LinearLayout>
 
     </ScrollView>
@@ -73,13 +46,10 @@
         android:id="@+id/NameRecipe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/NameRecipe"
-        android:background="@drawable/button_border"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <LinearLayout
         android:id="@+id/linearLayout5"
@@ -92,10 +62,9 @@
 
         <Button
             android:id="@+id/Menu"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/button_border"
             android:text="@string/Menu"
             android:textColor="@android:color/white"
             tools:ignore="ButtonStyle" />
