@@ -1,4 +1,4 @@
-package com.recipesfinder;
+package com.example.recepiesfinder;
 
 import android.content.Context;
 import android.database.SQLException;

@@ -254,7 +254,7 @@ public class FindIngredient extends AppCompatActivity {
         setContentView(R.layout.activity_find_ingridien);
         expListView = (ExpandableListView) findViewById(R.id.expListView);
 
-        com.recipesfinder.DataBase db = com.recipesfinder.DataBase.getDataBase(this);
+        DataBase db = DataBase.getDataBase(this);
         String[] ingredients = db.getIngredientsList();
         int[] str = new int[33];
         int count = 0;

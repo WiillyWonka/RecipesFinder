@@ -1,4 +1,4 @@
-package com.recipesfinder;
+package com.example.recepiesfinder;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -87,14 +87,14 @@ public class DataBase {
     }
 
     public Dish[] getAllDishList() {
-        String query = "SELECT dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name)" +
-                "from dishes" +
-                "join categories" +
-                "on dishes.category_id = categories.category_id" +
-                "join ingredients_matching" +
-                "on dishes.dish_id = ingredients_matching.dish_id" +
-                "join ingredients" +
-                "on ingredients.ingredient_id = ingredients_matching.ingredient_id" +
+        String query = "SELECT dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name) " +
+                "from dishes " +
+                "join categories " +
+                "on dishes.category_id = categories.category_id " +
+                "join ingredients_matching " +
+                "on dishes.dish_id = ingredients_matching.dish_id " +
+                "join ingredients "  +
+                "on ingredients.ingredient_id = ingredients_matching.ingredient_id " +
                 "GROUP BY (dish_name)";
 
         return getDishByQuery(query);
