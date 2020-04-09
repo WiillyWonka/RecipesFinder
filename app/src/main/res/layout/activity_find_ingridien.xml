@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,10 +8,20 @@
 
     <ExpandableListView
         android:id="@+id/expListView"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
+        android:layout_height="match_parent"
         android:divider="@android:color/holo_blue_dark"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="1dp"
+        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft">
+
+    </ExpandableListView>
+
+    <Button
+        android:id="@+id/FindButton"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="450dp"
+        android:text="@string/Find" />
 
 </RelativeLayout>
