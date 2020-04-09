@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.core.util.Pair;
@@ -20,18 +19,11 @@ public class ListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> expListTitle;
     private HashMap<String, List<String>> expListDetail;
-    private HashMap<String, CheckBox> SwitchCheck = new HashMap<>();
     public ListAdapter(Context context, List<String> expListTitle,
                        HashMap<String, List<String>> expListDetail) {
         this.context = context;
         this.expListTitle = expListTitle;
         this.expListDetail = expListDetail;
-        for(Map.Entry e: expListDetail.entrySet()){
-            for (String str: (List<String>)e.getValue()){
-                SwitchCheck.put(str, new CheckBox(context));
-                SwitchCheck.get(str).setChecked(false);
-            }
-        }
     }
 
     @Override
@@ -57,8 +49,6 @@ public class ListAdapter extends BaseExpandableListAdapter {
         }
         TextView expListTextView = (TextView) convertView.findViewById(R.id.expandedListItem);
         expListTextView.setText(expListText);
-        CheckBox check = (CheckBox) convertView.findViewById(R.id.checkIng);
-        check.setChecked(SwitchCheck.get(expListText).isChecked());
         return convertView;
     }
 
@@ -108,11 +98,5 @@ public class ListAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int listPosition, int expandedListPosition) {
         return true;
-    }
-    public void setMyCheck(String name, boolean value){
-        SwitchCheck.get(name).setChecked(value);
-    }
-    public boolean getMyCheck(String name){
-        return SwitchCheck.get(name).isChecked();
     }
 }

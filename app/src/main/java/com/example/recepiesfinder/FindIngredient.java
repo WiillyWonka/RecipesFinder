@@ -119,4 +119,3 @@ public class FindIngredient extends AppCompatActivity {
         });
     }
 }
-
