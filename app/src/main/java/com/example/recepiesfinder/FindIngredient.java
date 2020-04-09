@@ -1,4 +1,4 @@
-package com.example.recepiesfinder;
+package com.example.recipes_finder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,7 +28,7 @@ public class FindIngredient extends AppCompatActivity {
     protected HashMap<String, List<String>> expListDetail = new HashMap<>();
     protected CheckBox mCheck;
     protected TextView mTextView;
-    protected List<String> FindList = new ArrayList<>();
+    protected ArrayList<String> FindList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,10 +105,18 @@ public class FindIngredient extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* Intent i = new Intent();
-                i.putExtra("tag1", (Parcelable) FindList);
-                startActivity(i);*/
+                if (!FindList.isEmpty()) {
+                    Intent i = new Intent(v.getContext(), DisplayListOfDishesActivity.class);
+                    i.putExtra("class_name", FindIngredient.class.getName());
+                    i.putStringArrayListExtra("list", FindList);
+                    startActivity(i);
+                }
+                else{
+                    CharSequence s = "Выберите ингредиенты!";
+                    Toast.makeText(v.getContext(), s, s.length()).show();
+                }
             }
         });
     }
 }
+

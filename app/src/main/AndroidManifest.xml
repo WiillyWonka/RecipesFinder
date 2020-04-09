@@ -18,6 +18,7 @@
         <activity android:name=".AllRecipes" />
         <activity android:name=".FindIngredient" />
         <activity android:name=".Settings" />
+        <activity android:name=".DisplayListOfDishesActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.example.recepiesfinder;
+package com.example.recipes_finder;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -51,8 +51,8 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
 
         Glide.with(Recipe.this)
                 .load(dish.getPicture())
-                .placeholder(R.drawable.ic_logo1)
-                .error(R.drawable.ic_logo1)
+                .placeholder(R.drawable.logo)
+                .error(R.drawable.logo)
                 .into(imageView);
 
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -66,7 +66,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
             linearLayout.addView(tv);
             if (i < count-2) {
                 Button bt = new Button(this);
-                bt.setBackgroundResource(R.drawable.button_border);
+                bt.setBackgroundResource(R.drawable.button_boarder);
                 bt.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
                 bt.setGravity(1);
                 bt.setTextSize(14);
@@ -80,7 +80,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu1,menu);
+        //getMenuInflater().inflate(R.menu.main_menu1,menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -88,7 +88,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+       /* switch (id){
             case R.id.action_settings:
                 Intent intent2 = new Intent(this,Settings.class);
                 startActivity(intent2);
@@ -97,7 +97,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
                 Intent intent = new Intent(this,Help.class);
                 startActivity(intent);
                 break;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 

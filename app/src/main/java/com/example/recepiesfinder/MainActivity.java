@@ -1,4 +1,6 @@
-package com.example.recepiesfinder;
+package com.example.recipes_finder;
+
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu1,menu);
+        //getMenuInflater().inflate(R.menu.main_menu1,menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        /*switch (id){
             case R.id.action_settings:
                 Intent intent2 = new Intent(this,Settings.class);
                 startActivity(intent2);
@@ -52,28 +54,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(this,Help.class);
                 startActivity(intent);
                 break;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.Help:
-                Toast toastHelp = Toast.makeText(MainActivity.this, "Нажата кнопка : помощь", Toast.LENGTH_LONG);
-                toastHelp.show();
-                Intent intent = new Intent(this,Help.class);
-                startActivity(intent);
-                break;
+            //case R.id.Help:
+             //   Toast toastHelp = Toast.makeText(MainActivity.this, "Нажата кнопка : помощь", Toast.LENGTH_LONG);
+               // toastHelp.show();
+                //Intent intent = new Intent(this,Help.class);
+                //startActivity(intent);
+                //break;
             case R.id.AddIngr:
                 Intent intent1 = new Intent(this, FindIngredient.class);
                 startActivity(intent1);
                 break;
             case R.id.Allrec:
-                Intent intent3 = new Intent(this,Recipe.class);
+                Intent intent3 = new Intent(this, DisplayListOfDishesActivity.class);
+                intent3.putExtra("class_name", MainActivity.class.getName());
                 startActivity(intent3);
                 break;
         }
     }
 }
-
