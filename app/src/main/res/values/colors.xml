@@ -12,4 +12,5 @@
     <color name="my_textColorPrimary">#FFFFFF</color>
     <color name="my_background">#80e27e</color>
     <color name="colorPrimary2">#47526E</color>
+    <color name="for_buttons">#34515e</color>
 </resources>

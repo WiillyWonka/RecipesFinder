@@ -11,24 +11,4 @@
     <string name="ChangeBolt">Поменять шрифт</string>
     <string name="ChangeBackGr">Поменять фон</string>
     <string name="ChangeTheme">Поменять тему</string>
-    <string name="NameRecipe">Шоколадный торт Гиннесс на пиве</string>
-    <string name="Step1">Шаг 1</string>
-    <string name="SStep1">В отдельную посуду насыпаем 270 граммов пшеничной муки высшего сорта и 2 чайные ложки (без горки, то есть под нож) пищевой соды.</string>
-    <string name="Step2">Шаг 2</string>
-    <string name="Gines">
-        Ингредиенты:\n
-            \t\t\t\tШоколадное тесто:\n
-        \t\t\t\t\t\t1) Пиво темное (400 мл)\n
-        \t\t\t\t\t\t2) Сахар (350 гр)\n
-        \t\t\t\t\t\t3) Мука пшеничная высшего сорта (270 гр)\n
-        \t\t\t\t\t\t4) Яйца куриные (4 шт)\n
-        \t\t\t\t\t\t5) Масло сливочное (220 гр)\n
-        \t\t\t\t\t\t6) Какао-порошок (100 гр)\n
-        \t\t\t\t\t\t7) Сода пищевая (2 чайные ложки)\n\n
-
-            \t\t\t\t\Сливочный крем:\n
-        \t\t\t\t\t\t1) Сыр сливочный (400 граммов)\n
-        \t\t\t\t\t\t2) Сливки (200 граммов)\n
-        \t\t\t\t\t\t3) Сахарная пудра (120 граммов)\n</string>
-
 </resources>
