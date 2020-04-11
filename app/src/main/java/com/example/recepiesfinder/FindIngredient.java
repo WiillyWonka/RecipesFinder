@@ -1,5 +1,6 @@
-package com.example.recipes_finder;
+package com.example.recepiesfinder;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -7,6 +8,8 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
@@ -68,6 +71,8 @@ public class FindIngredient extends AppCompatActivity {
             }
         });
 
+
+
         expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
 
             @Override
@@ -117,5 +122,27 @@ public class FindIngredient extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu1,menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_settings:
+                Intent intent2 = new Intent(this,Settings.class);
+                startActivity(intent2);
+                break;
+            case R.id.action_help:
+                Intent intent = new Intent(this,Help.class);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
