@@ -1,5 +1,7 @@
 package com.example.recepiesfinder;
 
+
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +18,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button AddIngrBt;
     Button AllRecBt;
-    /*Button FindBt;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         AddIngrBt = (Button) findViewById(R.id.AddIngr);
         AllRecBt = (Button) findViewById(R.id.Allrec);
-        /*FindBt = (Button) findViewById(R.id.Find);*/
 
         ;
 
@@ -59,21 +59,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.Help:
-                Toast toastHelp = Toast.makeText(MainActivity.this, "Нажата кнопка : помощь", Toast.LENGTH_LONG);
-                toastHelp.show();
-                Intent intent = new Intent(this,Help.class);
-                startActivity(intent);
-                break;
             case R.id.AddIngr:
                 Intent intent1 = new Intent(this, FindIngredient.class);
                 startActivity(intent1);
                 break;
             case R.id.Allrec:
-                Intent intent3 = new Intent(this,Recipe.class);
+                Intent intent3 = new Intent(this, DisplayListOfDishesActivity.class);
+                intent3.putExtra("class_name", MainActivity.class.getName());
                 startActivity(intent3);
                 break;
         }
     }
 }
-

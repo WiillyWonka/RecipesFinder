@@ -1,51 +1,60 @@
 package com.example.recepiesfinder;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 public class FindIngredient extends AppCompatActivity {
     protected ExpandableListView expListView;
-    protected ExpandableListAdapter expListAdapter;
+    protected ListAdapter expListAdapter;
     protected List<String> expListTitle;
-    protected HashMap<String, List<String>> expListDetail;
+    protected HashMap<String, List<String>> expListDetail = new HashMap<>();
     protected CheckBox mCheck;
     protected TextView mTextView;
-    protected List<String> ActiveList = new ArrayList<>();
-    protected void loadData(){
-        expListDetail = new HashMap<>();
-        TypedArray arr = getResources().obtainTypedArray(R.array.ingredients);
-        for (int i = 0; i < arr.length(); ++i){
-            int resId = arr.getResourceId(i, -1);
-            if (resId < 0)
-                continue;
-            TypedArray help = getResources().obtainTypedArray(resId);
-            List<String> arrHelp = new ArrayList<String>();
-            for (int j = 0; j < help.length(); j++)
-                arrHelp.add(help.getString(j));
-            if (arrHelp.size() != 0)
-                expListDetail.put(arrHelp.get(0).substring(0,1), arrHelp);
-        }
-    }
+    protected ArrayList<String> FindList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_ingridien);
         expListView = (ExpandableListView) findViewById(R.id.expListView);
 
-        loadData();
+        List<String> ActiveList= new ArrayList<>();
+
+        DataBase db = DataBase.getDataBase(this);
+        String[] ingredients = db.getIngredientsList();
+        String last = "";
+        for (String str : ingredients){
+            String nowChar = str.substring(0, 1);
+            if (!nowChar.equals(last)){
+                if (ActiveList.size() != 0)
+                    expListDetail.put(ActiveList.get(0).substring(0, 1), ActiveList);
+                ActiveList = new ArrayList<>();
+                last = str.substring(0 , 1);
+            }
+            ActiveList.add(str);
+        }
+        expListDetail.put(ActiveList.get(0).substring(0, 1), ActiveList);
 
         expListTitle = new ArrayList<>(expListDetail.keySet());
         expListAdapter = new ListAdapter(this, expListTitle, expListDetail);
@@ -58,8 +67,11 @@ public class FindIngredient extends AppCompatActivity {
                 /*Toast.makeText(getApplicationContext(),
                         expListTitle.get(groupPosition) + " Список раскрыт.",
                         Toast.LENGTH_SHORT).show();*/
+
             }
         });
+
+
 
         expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
 
@@ -68,7 +80,7 @@ public class FindIngredient extends AppCompatActivity {
                 /*Toast.makeText(getApplicationContext(),
                         expListTitle.get(groupPosition) + " Список скрыт.",
                         Toast.LENGTH_SHORT).show();*/
-
+                expListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -77,29 +89,60 @@ public class FindIngredient extends AppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                /*((CheckBox) v.findViewById(R.id.checkIng)).setChecked(!((CheckBox) v.findViewById(R.id.checkIng)).isChecked());
-                if (((CheckBox) v.findViewById(R.id.checkIng)).isChecked())
-                {
-                    ActiveList.add(expListDetail.get(expListTitle.get(groupPosition))
+                String name = expListDetail.get(expListTitle.get(groupPosition))
+                        .get(childPosition);
+                expListAdapter.setMyCheck(name, !expListAdapter.getMyCheck(name));
+                CheckBox cb = (CheckBox) v.findViewById(R.id.checkIng);
+                cb.setChecked(expListAdapter.getMyCheck(name));
+                if (expListAdapter.getMyCheck(name)){
+                    FindList.add(expListDetail.get(expListTitle.get(groupPosition))
                             .get(childPosition));
-                    ((TextView) v.findViewById(R.id.expandedListItem)).setBackgroundColor(R.color.colorPrimary);
-                    ((TextView) v.findViewById(R.id.expandedListItem)).setTextColor(R.color.colorWhite);
                 }
-                else
-                    if (ActiveList.contains(expListDetail.get(expListTitle.get(groupPosition))
-                            .get(childPosition))){
-                        ActiveList.remove(expListDetail.get(expListTitle.get(groupPosition))
-                                .get(childPosition));
-                        ((TextView) v.findViewById(R.id.expandedListItem)).setBackgroundColor(R.color.colorWhite);
-                        ((TextView) v.findViewById(R.id.expandedListItem)).setTextColor(R.color.colorBlack);
-                    }
-                /*Toast.makeText(getApplicationContext(),
-                        expListTitle.get(groupPosition)
-                                + " : " + expListDetail.get(expListTitle.get(groupPosition))
-                                .get(childPosition), Toast.LENGTH_SHORT).show();*/
-                /*expListView.invalidate();*/
+                else{
+                    if (FindList.contains(name))
+                        FindList.remove(name);
+                }
+
                 return false;
             }
         });
+        Button b = findViewById(R.id.FindButton);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!FindList.isEmpty()) {
+                    Intent i = new Intent(v.getContext(), DisplayListOfDishesActivity.class);
+                    i.putExtra("class_name", FindIngredient.class.getName());
+                    i.putStringArrayListExtra("list", FindList);
+                    startActivity(i);
+                }
+                else{
+                    CharSequence s = "Выберите ингредиенты!";
+                    Toast.makeText(v.getContext(), s, s.length()).show();
+                }
+            }
+        });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu1,menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_settings:
+                Intent intent2 = new Intent(this,Settings.class);
+                startActivity(intent2);
+                break;
+            case R.id.action_help:
+                Intent intent = new Intent(this,Help.class);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
