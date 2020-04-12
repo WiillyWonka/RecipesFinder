@@ -1,4 +1,4 @@
-package com.example.recipes_finder;
+package com.example.recepiesfinder;
 
 
 
@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button AddIngrBt;
     Button AllRecBt;
-    /*Button FindBt;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +26,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         AddIngrBt = (Button) findViewById(R.id.AddIngr);
         AllRecBt = (Button) findViewById(R.id.Allrec);
-        /*FindBt = (Button) findViewById(R.id.Find);*/
 
         ;
 
@@ -37,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //getMenuInflater().inflate(R.menu.main_menu1,menu);
+        getMenuInflater().inflate(R.menu.main_menu1,menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -45,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        /*switch (id){
+        switch (id){
             case R.id.action_settings:
                 Intent intent2 = new Intent(this,Settings.class);
                 startActivity(intent2);
@@ -54,19 +52,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(this,Help.class);
                 startActivity(intent);
                 break;
-        }*/
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            //case R.id.Help:
-             //   Toast toastHelp = Toast.makeText(MainActivity.this, "Нажата кнопка : помощь", Toast.LENGTH_LONG);
-               // toastHelp.show();
-                //Intent intent = new Intent(this,Help.class);
-                //startActivity(intent);
-                //break;
             case R.id.AddIngr:
                 Intent intent1 = new Intent(this, FindIngredient.class);
                 startActivity(intent1);
