@@ -54,7 +54,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
 
         Button name_rec = new Button(this);
         name_rec.setText(dish.getName());
-        name_rec.setBackgroundResource(R.drawable.button_border1);
+        name_rec.setBackgroundResource(R.drawable.button_border);
         name_rec.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
         name_rec.setLayoutParams(lp1);
 

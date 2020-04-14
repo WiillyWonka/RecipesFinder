@@ -3,6 +3,7 @@ package com.example.recepiesfinder;
 import java.io.Serializable;
 
 public class Dish implements Serializable {
+    private int id;
     private String name;
     private String ingredients;
     private String picture; //TODO: fix picture
@@ -12,8 +13,9 @@ public class Dish implements Serializable {
     private String[] steps;
     private int count_steps;
 
-    public Dish(String name_, String ingredients_,
+    public Dish(String id_, String name_, String ingredients_,
                 String picture_, String category_, String steps_) {
+        id = Integer.parseInt(id_);
         name = name_;
         ingredients = ingredients_;
         picture = picture_;
@@ -22,6 +24,8 @@ public class Dish implements Serializable {
         steps = steps_.split("\n");
         count_steps = steps.length;
     }
+
+    public int getId() { return id; }
 
     public String getName() {
         return name;

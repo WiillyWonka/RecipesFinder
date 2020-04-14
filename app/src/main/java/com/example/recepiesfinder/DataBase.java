@@ -15,6 +15,7 @@ public class DataBase {
     private static final int STEPS = 2;
     private static final int CATEGORY = 3;
     private static final int INGREDIENTS = 4;
+    private static final int ID = 5;
     private static final String DISH_TABLE_NAME = "Dishes";
     private static final String CATEGORIES_TABLE_NAME = "Categories";
     private static final String MATCHING_TABLE_NAME = "Ingredients_matching";
@@ -73,11 +74,14 @@ public class DataBase {
 
         cursor.moveToFirst();
         for (int i = 0; i < dish.length; i++) {
-            dish[i] = new Dish(cursor.getString(DISH_NAME),
+            dish[i] = new Dish(
+                    cursor.getString(ID),
+                    cursor.getString(DISH_NAME),
                     cursor.getString(INGREDIENTS),
                     cursor.getString(DISH_PHOTO),
                     cursor.getString(CATEGORY),
-                    cursor.getString(STEPS));
+                    cursor.getString(STEPS)
+            );
             cursor.moveToNext();
         }
 
@@ -87,7 +91,7 @@ public class DataBase {
     }
 
     public Dish[] getAllDishList() {
-        String query = "SELECT dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name) " +
+        String query = "SELECT dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name), dishes.dish_id " +
                 "from dishes " +
                 "join categories " +
                 "on dishes.category_id = categories.category_id " +
@@ -110,7 +114,7 @@ public class DataBase {
 
         query += ")";
 
-        query = "select dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name) " +
+        query = "select dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name), tb.dish_id " +
                 "from ( " +
                 "  select count(dish_name) as number, dishes.* " +
                 "from ingredients ing " +
@@ -133,5 +137,19 @@ public class DataBase {
                 "ORDER by number DESC ";
 
         return getDishByQuery(query);
+    }
+
+    public Dish getDishById(Integer id) {
+        String query = "SELECT dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name), dishes.dish_id " +
+                "from dishes " +
+                "join categories " +
+                "on dishes.category_id = categories.category_id " +
+                "join ingredients_matching " +
+                "on dishes.dish_id = ingredients_matching.dish_id " +
+                "join ingredients "  +
+                "on ingredients.ingredient_id = ingredients_matching.ingredient_id " +
+                " where id = " + id.toString();
+
+        return getDishByQuery(query)[0];
     }
 }
