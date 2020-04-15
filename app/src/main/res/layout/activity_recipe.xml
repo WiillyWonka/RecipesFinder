@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".Recipe">
 
+
+
     <LinearLayout
         android:id="@+id/lll"
         android:layout_width="match_parent"
@@ -33,7 +35,9 @@
             <ImageView
                 android:id="@+id/Recipe_image"
                 android:layout_width="match_parent"
-                android:layout_height="201dp" />
+                android:layout_height="200dp" />
+
+
 
         </LinearLayout>
 
@@ -68,4 +72,17 @@
             tools:ignore="ButtonStyle" />
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/ImgBt"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/star_47680"
+        android:background="@drawable/button_border1"
+        app:layout_constraintBottom_toBottomOf="@+id/main_scroll"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
