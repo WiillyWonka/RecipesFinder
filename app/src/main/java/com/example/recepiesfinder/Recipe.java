@@ -30,7 +30,6 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
     private Button MenuBt;
     private ImageButton CheckBt;
     private ViewGroup.LayoutParams lp;
-    private ViewGroup.LayoutParams lp1;
     private LinearLayout linearLayout;
     private LinearLayout layout;
     private String[] ingredients;
@@ -53,14 +52,13 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
         name_rec.setText(dish.getName());
         name_rec.setBackgroundResource(R.drawable.button_border);
         name_rec.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
-        name_rec.setLayoutParams(lp1);
+        name_rec.setLayoutParams(lp);
 
         layout.addView(name_rec);
     }
 
     private void SetLayoutParams(){
         lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp1 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,100);
     }
 
     private void SetSteps(int count){
@@ -73,13 +71,14 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
                 bt.setGravity(1);
                 bt.setTextSize(14);
                 bt.setText("Шаг " + i);
-                bt.setLayoutParams(lp1);
+                bt.setLayoutParams(lp);
                 linearLayout.addView(bt);
             }
 
             TextView tv = new TextView(this);
             tv.setText("\n" + text[i] + "\n");
             tv.setLayoutParams(lp);
+            tv.setPadding(30,0,0,0);
             tv.setTextSize(17);
             linearLayout.addView(tv);
         }
@@ -89,6 +88,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
         for(int i = 0; i < ingredients.length; i++){
             TextView textView = new TextView(this);
             textView.setLayoutParams(lp);
+            textView.setPadding(30,0,0,0);
             textView.setTextSize(17);
             if(i == 0){
                 textView.setText(ingredients[i]);
