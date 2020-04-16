@@ -37,6 +37,8 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
     private String[] text;
     private static Dish dish;
 
+    private boolean come_from_favorites = false;
+
     static SharedPreferences sharedPreferences;
 
 
@@ -116,7 +118,12 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
         Bundle argum = getIntent().getExtras();
         dish = null;
         if(argum!=null){
-            dish = (Dish) argum.getSerializable(Dish.class.getSimpleName());
+            if(argum.containsKey("favourites")){
+                come_from_favorites = true;
+                dish = (Dish) argum.getSerializable("favourites");
+            }else {
+                dish = (Dish) argum.getSerializable(Dish.class.getSimpleName());
+            }
         }
 
         String[] test = dish.getIngredients().split(",");
@@ -172,6 +179,15 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
         return super.onOptionsItemSelected(item);
     }
 
+    private void bringDataBack(boolean flag){
+        if(flag){
+            setResult(RESULT_OK);
+        }else{
+            setResult(RESULT_CANCELED);
+        }
+       // finish();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -184,10 +200,15 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
                     if(!sharedPreferences.contains(String.valueOf(dish.getId()))){
                         CheckBt.setImageDrawable(getResources().getDrawable(R.drawable.star_86960));
                         addrec(this);
-                        System.out.println(Environment.getDataDirectory());
+                        if(come_from_favorites){
+                            bringDataBack(false);
+                        }
                     }else{
                         CheckBt.setImageDrawable(getResources().getDrawable(R.drawable.star_47680));
                         remove(this);
+                        if(come_from_favorites){
+                            bringDataBack(true);
+                        }
                     }
                 break;
         }
