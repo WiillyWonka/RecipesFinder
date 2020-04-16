@@ -148,7 +148,7 @@ public class DataBase {
                 "on dishes.dish_id = ingredients_matching.dish_id " +
                 "join ingredients "  +
                 "on ingredients.ingredient_id = ingredients_matching.ingredient_id " +
-                " where id = " + id.toString();
+                " where dishes.dish_id = " + id.toString();
 
         return getDishByQuery(query)[0];
     }
