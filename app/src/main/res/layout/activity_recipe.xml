@@ -55,7 +55,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout5"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Menu"
+            android:background="@drawable/button_border1"
             android:textColor="@android:color/white"
             tools:ignore="ButtonStyle" />
 
