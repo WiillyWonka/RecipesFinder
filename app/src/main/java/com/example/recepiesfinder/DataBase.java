@@ -1,5 +1,6 @@
 package com.example.recepiesfinder;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -10,16 +11,26 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 public class DataBase {
-    private static final int DISH_NAME = 0;
-    private static final int DISH_PHOTO = 1;
-    private static final int STEPS = 2;
-    private static final int CATEGORY = 3;
-    private static final int INGREDIENTS = 4;
-    private static final int ID = 5;
     private static final String DISH_TABLE_NAME = "Dishes";
     private static final String CATEGORIES_TABLE_NAME = "Categories";
     private static final String MATCHING_TABLE_NAME = "Ingredients_matching";
     private static final String INGREDIENTS_TABLE_NAME = "Ingredients";
+
+    private static final String DISH_ID_COLUMN_NAME = "dish_id";
+    private static final String DISH_PHOTO_COLUMN_NAME = "dish_photo";
+    private static final String DISH_NAME_COLUMN_NAME = "dish_name";
+    private static final String DISH_STEPS_COLUMN_NAME = "dish_steps";
+    private static final String DISH_CATEGORY_COLUMN_NAME = "category_id";
+
+    private static final String INGREDIENTS_ID_COLUMN_NAME = "ingredient_id";
+    private static final String INGREDIENTS_PRIORITY_COLUMN_NAME = "ingredient_prior";
+    private static final String INGREDIENTS_NAME_COLUMN_NAME = "ingredient_name";
+
+    private static final String INGREDIENTS_MATCHING_INGREDIENT_ID_COLUMN_NAME = "ingredient_id";
+    private static final String INGREDIENTS_MATCHING_DISH_ID_COLUMN_NAME = "dish_id";
+
+    private static final String CATEGORIES_CATEGORY_ID_COLUMN_NAME = "Category_id";
+    private static final String CATEGORIES_CATEGORY_NAME_COLUMN_NAME = "Category_name";
 
     private static SQLiteDatabase mDb = null;
     private static DataBase db = null;
@@ -49,6 +60,89 @@ public class DataBase {
         return db;
     }
 
+    public long saveDish(@NotNull Dish dish) {
+        Cursor cursor;
+
+        cursor = mDb.query(
+                CATEGORIES_TABLE_NAME, new String[]{CATEGORIES_CATEGORY_ID_COLUMN_NAME},  CATEGORIES_CATEGORY_NAME_COLUMN_NAME + " = \"" + dish.getCategory() +"\"",
+                null, null, null, null, null);
+
+        cursor.moveToFirst();
+        long categoryID = cursor.getLong(0);
+
+        cursor.close();
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(DISH_PHOTO_COLUMN_NAME, "-");
+        cv.put(DISH_NAME_COLUMN_NAME, dish.getName());
+        String steps = "";
+        for (String step : dish.getSteps()) steps += step + "\n";
+        cv.put(DISH_STEPS_COLUMN_NAME, steps);
+        cv.put(DISH_CATEGORY_COLUMN_NAME, categoryID);
+
+        long dishID = mDb.insert(DISH_TABLE_NAME, null, cv);
+
+        cursor.close();
+
+        long ingredientID;
+        for (String ingredient : dish.getIngredients().split(",")) {
+            cursor = mDb.rawQuery("SELECT * FROM ingredients " +
+                    "WHERE ingredients.ingredient_name = \'" + ingredient + "\'" , null);
+
+
+            if (cursor.moveToFirst()) {
+                ingredientID = cursor.getLong(0);
+            } else {
+                cv = new ContentValues();
+                cv.put(INGREDIENTS_NAME_COLUMN_NAME, ingredient);
+                cv.put(INGREDIENTS_PRIORITY_COLUMN_NAME, 1);
+
+                ingredientID = mDb.insert(INGREDIENTS_TABLE_NAME, null, cv);
+            }
+
+            cv = new ContentValues();
+            cv.put(INGREDIENTS_MATCHING_DISH_ID_COLUMN_NAME, dishID);
+            cv.put(INGREDIENTS_MATCHING_INGREDIENT_ID_COLUMN_NAME, ingredientID);
+
+            long k = mDb.insert(MATCHING_TABLE_NAME, null, cv);
+
+            cursor.close();
+        }
+
+        return dishID;
+    }
+
+    public void deleteDish(Integer dishID) {
+        Cursor cursor = mDb.query(
+                MATCHING_TABLE_NAME, new String[] {INGREDIENTS_MATCHING_INGREDIENT_ID_COLUMN_NAME}, INGREDIENTS_MATCHING_DISH_ID_COLUMN_NAME + " = " + dishID.toString(),
+                null, null, null, null, null);
+
+        Long[] arrayIngredientsID = new Long[cursor.getCount()];
+
+        cursor.moveToFirst();
+        for (int i = 0; i < arrayIngredientsID.length; i++) {
+            arrayIngredientsID[i] = cursor.getLong(0);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        mDb.delete(DISH_TABLE_NAME, DISH_ID_COLUMN_NAME + " = " + dishID.toString(), null);
+        mDb.delete(MATCHING_TABLE_NAME, INGREDIENTS_MATCHING_DISH_ID_COLUMN_NAME + " = " + dishID.toString(), null);
+
+        for (int i = 0; i < arrayIngredientsID.length; i++) {
+            cursor = mDb.query(
+                    MATCHING_TABLE_NAME, null,
+                    INGREDIENTS_MATCHING_INGREDIENT_ID_COLUMN_NAME + " = " + arrayIngredientsID[i].toString(),
+                    null, null, null, null, null);
+
+            if (cursor.getCount() == 0) {
+                mDb.delete(INGREDIENTS_TABLE_NAME, INGREDIENTS_ID_COLUMN_NAME + " = " + arrayIngredientsID[i].toString(), null);
+            }
+        }
+
+    }
+
     public String[] getIngredientsList() {
         Cursor cursor = mDb.rawQuery("SELECT ingredient_name " +
                 "FROM ingredients " +
@@ -68,26 +162,51 @@ public class DataBase {
     }
 
     private Dish[] getDishByQuery(String query) {
+        final int DISH_NAME = 0;
+        final int DISH_PHOTO = 1;
+        final int STEPS = 2;
+        final int CATEGORY = 3;
+        final int INGREDIENTS = 4;
+        final int ID = 5;
+
         Cursor cursor = mDb.rawQuery(query, null);
 
-        Dish[] dish = new Dish[cursor.getCount()];
+        Dish[] dish = null;
 
-        cursor.moveToFirst();
-        for (int i = 0; i < dish.length; i++) {
-            dish[i] = new Dish(
-                    cursor.getString(ID),
-                    cursor.getString(DISH_NAME),
-                    cursor.getString(INGREDIENTS),
-                    cursor.getString(DISH_PHOTO),
-                    cursor.getString(CATEGORY),
-                    cursor.getString(STEPS)
-            );
-            cursor.moveToNext();
+        if (cursor.moveToFirst() && cursor.getInt(ID) > 0) {
+            dish = new Dish[cursor.getCount()];
+            for (int i = 0; i < dish.length; i++) {
+                int k = cursor.getInt(ID);
+                String n = cursor.getString(DISH_NAME);
+                n = cursor.getString(INGREDIENTS);
+                n = cursor.getString(DISH_PHOTO);
+                n = cursor.getString(CATEGORY);
+                n = cursor.getString(STEPS);
+                dish[i] = new Dish(
+                        cursor.getInt(ID),
+                        cursor.getString(DISH_NAME),
+                        cursor.getString(INGREDIENTS),
+                        cursor.getString(DISH_PHOTO),
+                        cursor.getString(CATEGORY),
+                        cursor.getString(STEPS)
+                );
+                cursor.moveToNext();
+            }
         }
 
         cursor.close();
 
         return dish;
+    }
+
+    public boolean getMatching(String ingredient) {
+        Cursor cursor = mDb.rawQuery("SELECT * FROM " +
+                "ingredients_matching " +
+                "join ingredients " +
+                "on ingredients.ingredient_id = ingredients_matching.ingredient_id " +
+                "WHERE ingredient_name = \"" + ingredient + "\"", null);
+
+        return cursor.getCount() > 0;
     }
 
     public Dish[] getAllDishList() {
@@ -140,7 +259,7 @@ public class DataBase {
     }
 
     public Dish getDishById(Integer id) {
-        String query = "SELECT dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name), dishes.dish_id " +
+        String query = "SELECT dishes.dish_name, dishes.dish_photo, dishes.dish_steps, category_name, group_concat(ingredients.ingredient_name), dishes.dish_id " +
                 "from dishes " +
                 "join categories " +
                 "on dishes.category_id = categories.category_id " +
@@ -148,8 +267,10 @@ public class DataBase {
                 "on dishes.dish_id = ingredients_matching.dish_id " +
                 "join ingredients "  +
                 "on ingredients.ingredient_id = ingredients_matching.ingredient_id " +
-                " where dishes.dish_id = " + id.toString();
+                "where dishes.dish_id = " + id.toString();
 
-        return getDishByQuery(query)[0];
+        Dish[] dishes = getDishByQuery(query);
+
+        return dishes == null ? null : dishes[0];
     }
 }
