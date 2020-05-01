@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent3);
                 break;
             case R.id.my_recipes:
+                Intent intent4 = new Intent(this, DisplayListOfDishesActivity.class);
+                intent4.putExtra("class_name", "my_recipes");
+                startActivity(intent4);
                 break;
         }
     }

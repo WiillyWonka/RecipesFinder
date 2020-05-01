@@ -1,6 +1,5 @@
 package com.example.recepiesfinder;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,12 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +37,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
     private String[] names_;
     private String[] urls_;
     Button MenuBt;
+    Button AddReipeBt;
 
     public DisplayListOfDishesActivity(){}
 
@@ -97,12 +93,54 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getIntent().getExtras();
-        setContentView(R.layout.activity_list_of_dishes);
-        MenuBt = (Button) findViewById(R.id.Menu);
-        MenuBt.setOnClickListener(this);
         if (arguments != null){
             String name_ = arguments.getString("class_name");
+            if(name_.equals("my_recipes")){
+                setContentView(R.layout.activity_my_recipes);
+                AddReipeBt = (Button)findViewById(R.id.add_recipe);
+                AddReipeBt.setOnClickListener(this);
+                MenuBt = (Button) findViewById(R.id.Menu);
+                MenuBt.setOnClickListener(this);
+                Button AddRecipeBt_ = (Button)findViewById(R.id.add_recipe);
+
+                DataBase db = DataBase.getDataBase(this);
+                sharedPreferences = getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
+                Map<String, ?> map = sharedPreferences.getAll();
+                Set<String> str_of_fav = map.keySet();
+                list_of_dishes_ = new Dish[str_of_fav.size()];
+
+                if(list_of_dishes_.length == 0){
+                    TextView text = (TextView)findViewById(R.id.TextRec);
+                    text.setText("Nothing Here");
+                    text.setTextSize(20);
+                }else{
+                    int j = 0;
+                    for (String key : str_of_fav){
+                        list_of_dishes_[j] = db.getDishById(Objects.requireNonNull((Integer)(map.get(key))));
+                        j++;
+                    }
+                    ConvertToStrings();
+                    DownloadURLS();
+                    mAdapter = new DishAdapter(this);
+                    ListView listView = (ListView)findViewById(R.id.lvMain);
+                    listView.setAdapter(mAdapter);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            String selection = mAdapter.getString(position);
+                            Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(view.getContext(), Recipe.class);
+                            intent.putExtra("favourites", list_of_dishes_[position]);
+                            startActivityForResult(intent, 1);
+                        }
+                    });
+                }
+
+            }
             if (name_.equals("favourites")){
+                setContentView(R.layout.activity_list_of_dishes);
+                MenuBt = (Button) findViewById(R.id.Menu);
+                MenuBt.setOnClickListener(this);
                 DataBase db = DataBase.getDataBase(this);
                 sharedPreferences = getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
                 Map<String, ?> map = sharedPreferences.getAll();
@@ -130,6 +168,9 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                 });
             }
             if (name_.equals(MainActivity.class.getName())) {
+                setContentView(R.layout.activity_list_of_dishes);
+                MenuBt = (Button) findViewById(R.id.Menu);
+                MenuBt.setOnClickListener(this);
                 DataBase db = DataBase.getDataBase(this);
                 list_of_dishes_ = db.getAllDishList();
                 ConvertToStrings();
@@ -149,6 +190,9 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                 });
             }
             if (name_.equals(FindIngredient.class.getName())){
+                setContentView(R.layout.activity_list_of_dishes);
+                MenuBt = (Button) findViewById(R.id.Menu);
+                MenuBt.setOnClickListener(this);
                 ArrayList<String> dishes_ = getIntent().getStringArrayListExtra("list");
                 if (dishes_ != null) {
                     String[] ingredients = dishes_.toArray(new String[dishes_.size()]);
@@ -197,6 +241,10 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
             case R.id.Menu:
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.add_recipe:
+                Intent intent1 = new Intent(this,UserRecipe.class);
+                startActivity(intent1);
                 break;
         }
     }
