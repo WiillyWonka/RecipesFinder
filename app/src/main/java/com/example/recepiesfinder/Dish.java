@@ -13,9 +13,9 @@ public class Dish implements Serializable {
     private String[] steps;
     private int count_steps;
 
-    public Dish(String id_, String name_, String ingredients_,
+    public Dish(int id_, String name_, String ingredients_,
                 String picture_, String category_, String steps_) {
-        id = Integer.parseInt(id_);
+        id = id_;
         name = name_;
         ingredients = ingredients_;
         picture = picture_;
