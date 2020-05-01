@@ -30,6 +30,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
     private Button MenuBt;
     private ImageButton CheckBt;
     private ViewGroup.LayoutParams lp;
+    private ViewGroup.LayoutParams lp1;
     private LinearLayout linearLayout;
     private LinearLayout layout;
     private String[] ingredients;
@@ -37,6 +38,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
     private static Dish dish;
 
     private boolean come_from_favorites = false;
+    private boolean come_from_user_recipe = false;
 
     static SharedPreferences sharedPreferences;
 
@@ -52,35 +54,57 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
         name_rec.setText(dish.getName());
         name_rec.setBackgroundResource(R.drawable.button_border);
         name_rec.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
-        name_rec.setLayoutParams(lp);
+        name_rec.setLayoutParams(lp1);
 
         layout.addView(name_rec);
     }
 
     private void SetLayoutParams(){
         lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp1 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,100);
     }
 
-    private void SetSteps(int count){
+    private void SetSteps(int count, boolean user){
         text = dish.getSteps();
-        for(int i = 1; i<count-1;i++) {
-            if (i < count - 1) {
-                Button bt = new Button(this);
-                bt.setBackgroundResource(R.drawable.button_border);
-                bt.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
-                bt.setGravity(1);
-                bt.setTextSize(14);
-                bt.setText("Шаг " + i);
-                bt.setLayoutParams(lp);
-                linearLayout.addView(bt);
-            }
+        if(!user){
+            for(int i = 1; i<count-1;i++) {
+                if (i < count - 1) {
+                    Button bt = new Button(this);
+                    bt.setBackgroundResource(R.drawable.button_border);
+                    bt.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
+                    bt.setGravity(1);
+                    bt.setTextSize(14);
+                    bt.setText("Шаг " + i);
+                    bt.setLayoutParams(lp1);
+                    linearLayout.addView(bt);
+                }
 
-            TextView tv = new TextView(this);
-            tv.setText("\n" + text[i] + "\n");
-            tv.setLayoutParams(lp);
-            tv.setPadding(30,0,0,0);
-            tv.setTextSize(17);
-            linearLayout.addView(tv);
+                TextView tv = new TextView(this);
+                tv.setText("\n" + text[i] + "\n");
+                tv.setLayoutParams(lp);
+                tv.setTextSize(17);
+                linearLayout.addView(tv);
+            }
+        }else{
+            for(int i = 0; i<count;i++) {
+
+                String test = text[i];
+                if(!test.equals("")) {
+                    Button bt = new Button(this);
+                    bt.setBackgroundResource(R.drawable.button_border);
+                    bt.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
+                    bt.setGravity(1);
+                    bt.setTextSize(14);
+                    bt.setText("Шаг " + (i + 1));
+                    bt.setLayoutParams(lp1);
+                    linearLayout.addView(bt);
+                    TextView tv = new TextView(this);
+                    tv.setText("\n" + text[i] + "\n");
+                    tv.setLayoutParams(lp);
+                    tv.setTextSize(17);
+                    linearLayout.addView(tv);
+                }
+            }
         }
     }
 
@@ -88,7 +112,6 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
         for(int i = 0; i < ingredients.length; i++){
             TextView textView = new TextView(this);
             textView.setLayoutParams(lp);
-            textView.setPadding(30,0,0,0);
             textView.setTextSize(17);
             if(i == 0){
                 textView.setText(ingredients[i]);
@@ -118,11 +141,16 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
         Bundle argum = getIntent().getExtras();
         dish = null;
         if(argum!=null){
-            if(argum.containsKey("favourites")){
-                come_from_favorites = true;
-                dish = (Dish) argum.getSerializable("favourites");
+            if(argum.containsKey("user")){
+                come_from_user_recipe = true;
+                dish = (Dish) argum.getSerializable("user");
             }else {
-                dish = (Dish) argum.getSerializable(Dish.class.getSimpleName());
+                if (argum.containsKey("favourites")) {
+                    come_from_favorites = true;
+                    dish = (Dish) argum.getSerializable("favourites");
+                } else {
+                    dish = (Dish) argum.getSerializable(Dish.class.getSimpleName());
+                }
             }
         }
 
@@ -147,7 +175,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
                 .into(imageView);
 
         PrintIngredients();
-        SetSteps(dish.getCount_steps());
+        SetSteps(dish.getCount_steps(),come_from_user_recipe);
 
         sharedPreferences = getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
         if(sharedPreferences.contains(String.valueOf(dish.getId()))){
