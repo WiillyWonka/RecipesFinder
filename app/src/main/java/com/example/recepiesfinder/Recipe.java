@@ -145,6 +145,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
                 come_from_user_recipe = true;
                 dish = (Dish) argum.getSerializable("user");
             }else {
+
                 if (argum.containsKey("favourites")) {
                     come_from_favorites = true;
                     dish = (Dish) argum.getSerializable("favourites");
@@ -166,13 +167,6 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
 
         SetButtons();
 
-        ImageView imageView = findViewById(R.id.Recipe_image);
-
-        Glide.with(Recipe.this)
-                .load(dish.getPicture())
-                .placeholder(R.drawable.ic_logo1)
-                .error(R.drawable.ic_logo1)
-                .into(imageView);
 
         PrintIngredients();
         SetSteps(dish.getCount_steps(),come_from_user_recipe);

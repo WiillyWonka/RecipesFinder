@@ -49,7 +49,8 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
         int size = list_of_dishes_.length;
         names_ = new String[size];
         for (int i = 0; i < size; i++){
-            names_[i] = list_of_dishes_[i].getName();
+            if(list_of_dishes_[i]!=null)
+                names_[i] = list_of_dishes_[i].getName();
         }
     }
 
@@ -57,7 +58,8 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
         int size = list_of_dishes_.length;
         urls_ = new String[size];
         for (int i = 0; i < size; i++){
-            urls_[i] = list_of_dishes_[i].getPicture();
+            if(list_of_dishes_[i]!=null)
+                urls_[i] = list_of_dishes_[i].getPicture();
         }
     }
 
@@ -104,7 +106,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                 Button AddRecipeBt_ = (Button)findViewById(R.id.add_recipe);
 
                 DataBase db = DataBase.getDataBase(this);
-                sharedPreferences = getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
+                sharedPreferences = getSharedPreferences("user.recipes.id", Context.MODE_PRIVATE);
                 Map<String, ?> map = sharedPreferences.getAll();
                 Set<String> str_of_fav = map.keySet();
                 list_of_dishes_ = new Dish[str_of_fav.size()];
@@ -130,7 +132,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                             String selection = mAdapter.getString(position);
                             Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(view.getContext(), Recipe.class);
-                            intent.putExtra("favourites", list_of_dishes_[position]);
+                            intent.putExtra("user", list_of_dishes_[position]);
                             startActivityForResult(intent, 1);
                         }
                     });
@@ -244,7 +246,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                 break;
             case R.id.add_recipe:
                 Intent intent1 = new Intent(this,UserRecipe.class);
-                startActivity(intent1);
+                startActivityForResult(intent1,1);
                 break;
         }
     }
