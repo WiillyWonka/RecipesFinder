@@ -167,6 +167,13 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
 
         SetButtons();
 
+        ImageView imageView = findViewById(R.id.Recipe_image);	
+
+        Glide.with(Recipe.this)	
+                .load(dish.getPicture())	
+                .placeholder(R.drawable.ic_logo1)	
+                .error(R.drawable.ic_logo1)	
+                .into(imageView);
 
         PrintIngredients();
         SetSteps(dish.getCount_steps(),come_from_user_recipe);
