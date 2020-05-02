@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -29,11 +31,19 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
 
     Dish dish;
 
+    int count_of_dishes;
+
+    boolean save_and_exit = false;
+
+    DataBase db;
+
     String[] ingredients_list_from_db;
 
     final int DIALOG_EXIT = 1;
     final int DIALOG_EMPTY_INGREDIENT_LIST = 2;
     final int DIALOG_EMPTY_NAME = 3;
+    final int DIALOG_SAVE = 4;
+    final int DIALOG_EMPTY_CATEGORY = 5;
 
     int count_of_ingredients_ = 0;
     int count_of_steps_ = 0;
@@ -50,7 +60,6 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
 
     LinearLayout main_ingredients_layout_;
     LinearLayout main_steps_layout_;
-
 
     LinearLayout.LayoutParams lp_for_nested_layout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     LinearLayout.LayoutParams lp_for_nested_view_components1 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT,3f);
@@ -205,8 +214,11 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
 
     private Dish Save_User_Recipe(){
         EditText Name_ = (EditText)findViewById(R.id.NameRecipe);
+
         if(item.equals(categories_[0])){
             item = "";
+            showDialog(DIALOG_EMPTY_CATEGORY);
+            return  null;
         }
 
         if(Name_.getText().toString().equals("")){
@@ -238,19 +250,18 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
                 steps = new String(c);
             }
         }
-        return new Dish(200, Name_.getText().toString(),ingredients,null,item,steps);
+        return new Dish(count_of_dishes, Name_.getText().toString(), ingredients, null, item, steps);
     }
+
 
     AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
             item = (String)parent.getItemAtPosition(position);
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
-
         }
     };
 
@@ -260,9 +271,15 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.activity_add_params_user_recipe);
 
 
-        DataBase db = DataBase.getDataBase(this);
+        db = DataBase.getDataBase(this);
 
         ingredients_list_from_db = db.getIngredientsList();
+
+
+        Dish[] dishes = db.getAllDishList();
+
+        count_of_dishes = dishes.length + 1;
+
 
         Create_Buttons();
         Create_Layouts();
@@ -297,11 +314,26 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
             adb.setNegativeButton("Ок",myClickListener);
             return adb.create();
         }
+        if(id == DIALOG_EMPTY_CATEGORY){
+            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+            adb.setTitle("Вы должны выбрать категорию рецепта");
+            adb.setMessage("Чтобы продолжить, выберите категорию рецепта из предложенного списка");
+            adb.setNegativeButton("Ок",myClickListener);
+            return adb.create();
+        }
         if(id == DIALOG_EMPTY_NAME){
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             adb.setTitle("Вы должны ввести название рецепта");
             adb.setMessage("Чтобы продолжить, введите название рецепта в пустое поле");
             adb.setNegativeButton("Ок",myClickListener);
+            return adb.create();
+        }
+        if(id == DIALOG_SAVE){
+            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+            adb.setTitle("Вы точно хотите сохранить рецепт?");
+            adb.setMessage("Вы можете сохранить рецепт или остаться и преверить/отредактировать введенные данные");
+            adb.setPositiveButton("Сохранить",myClickListener2);
+            adb.setNegativeButton("Редактировать", myClickListener2);
             return adb.create();
         }
         return super.onCreateDialog(id);
@@ -324,20 +356,54 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
                         break;
                     }
                     dish = Save_User_Recipe();
-                    if(dish == null){
+                    if(dish!=null){
+                        SharedPreferences sharedPreferences = getSharedPreferences("user.recipes.id", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt(String.valueOf(dish.getId()),dish.getId()).apply();
+                        db.saveDish(dish);
+                        bring_data_back();
+                        Go_to_menu();
+                        break;
+                    }else {
                         showDialog(DIALOG_EMPTY_INGREDIENT_LIST);
                         break;
                     }
-                    Go_to_menu();
+            }
+        }
+    };
+
+    DialogInterface.OnClickListener myClickListener2 = new DialogInterface.OnClickListener() {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case Dialog.BUTTON_POSITIVE:
+                    dish = Save_User_Recipe();
+                    if(dish!=null){
+                        SharedPreferences sharedPreferences = getSharedPreferences("user.recipes.id", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt(String.valueOf(dish.getId()),dish.getId()).apply();
+                        db.saveDish(dish);
+                        bring_data_back();
+                    }
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
                     break;
             }
         }
     };
 
+
     private void Go_to_menu(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+    private void bring_data_back(){
+        setResult(RESULT_OK);
+        finish();
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -352,12 +418,7 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
                 Create_field_for_step();
                 break;
             case R.id.SaveBt:
-                dish = Save_User_Recipe();
-                if(dish!=null) {
-                    Intent intent = new Intent(this, Recipe.class);
-                    intent.putExtra("user", dish);
-                    startActivity(intent);
-                }
+                showDialog(DIALOG_SAVE);
                 break;
         }
     }
