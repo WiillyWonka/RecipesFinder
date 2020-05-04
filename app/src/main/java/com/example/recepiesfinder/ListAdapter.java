@@ -7,11 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.core.util.Pair;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +23,18 @@ import java.util.Map;
 public class ListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> expListTitle;
+    private List<String> expListTitleFull;
     private HashMap<String, List<String>> expListDetail;
+    private HashMap<String, List<String>> expListDetailFull;
     private HashMap<String, CheckBox> SwitchCheck = new HashMap<>();
+
     public ListAdapter(Context context, List<String> expListTitle,
                        HashMap<String, List<String>> expListDetail) {
         this.context = context;
         this.expListTitle = expListTitle;
+        expListTitleFull = new ArrayList<>(expListTitle);
         this.expListDetail = expListDetail;
+        expListDetailFull = new HashMap<>(expListDetail);
         for(Map.Entry e: expListDetail.entrySet()){
             for (String str: (List<String>)e.getValue()){
                 SwitchCheck.put(str, new CheckBox(context));
@@ -115,4 +124,33 @@ public class ListAdapter extends BaseExpandableListAdapter {
     public boolean getMyCheck(String name){
         return SwitchCheck.get(name).isChecked();
     }
+
+
+    public void filter(String text) {
+        expListDetail.clear();
+        expListTitle.clear();
+        if (text.isEmpty()) {
+            expListDetail.putAll(expListDetailFull);
+            expListTitle.addAll(expListTitleFull);
+        } else {
+            String filPat = text.toLowerCase().trim();
+
+            for (Map.Entry e: expListDetailFull.entrySet()){
+                for (String str: (List<String>)e.getValue()){
+                    if (str.toLowerCase().startsWith(filPat)){
+                        if (expListDetail.get(str.substring(0, 1)) != null){
+                            expListDetail.get(str.substring(0, 1)).add(str);
+                        }
+                        else {
+                            expListDetail.put(str.substring(0, 1), new ArrayList<String>(Collections.singleton(str)));
+                        }
+
+                    }
+                }
+            }
+            expListTitle.addAll(expListDetail.keySet());
+        }
+        notifyDataSetChanged();
+    }
+
 }
