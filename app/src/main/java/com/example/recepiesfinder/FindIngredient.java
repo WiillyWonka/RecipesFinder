@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -111,10 +112,10 @@ public class FindIngredient extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!FindList.isEmpty()) {
-                    Intent i = new Intent(v.getContext(), DisplayListOfDishesActivity.class);
+                    Intent i = new Intent(v.getContext(), ListOfSelectedIngredients.class);
                     i.putExtra("class_name", FindIngredient.class.getName());
                     i.putStringArrayListExtra("list", FindList);
-                    startActivity(i);
+                    startActivityForResult(i, 1);
                 }
                 else{
                     CharSequence s = "Выберите ингредиенты!";
@@ -122,6 +123,44 @@ public class FindIngredient extends AppCompatActivity {
                 }
             }
         });
+        SearchView sV = findViewById(R.id.Seek);
+        sV.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                expListAdapter.filter(newText);
+                return false;
+            }
+        });
+
+    }
+
+    //changes HERE!!!
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
+        ArrayList<String> renew_FindList = (ArrayList<String>)data.getStringArrayListExtra("list");
+        if (renew_FindList != null && resultCode == RESULT_OK) {
+            for (String name : FindList) {
+                if (!renew_FindList.contains(name)) {
+                    expListAdapter.setMyCheck(name, !expListAdapter.getMyCheck(name));
+                    CheckBox cb = (CheckBox) findViewById(R.id.checkIng);
+                    cb.setChecked(expListAdapter.getMyCheck(name));
+                    cb.refreshDrawableState();
+                    expListAdapter.notifyDataSetChanged();
+                }
+            }
+            FindList.clear();
+            FindList = (ArrayList<String>) renew_FindList.clone();
+            //FindIngredient.this.onRestart();
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

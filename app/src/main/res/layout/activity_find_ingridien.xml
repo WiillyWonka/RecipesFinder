@@ -6,22 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".FindIngredient">
 
-    <ExpandableListView
-        android:id="@+id/expListView"
+
+    <SearchView
+        android:id="@+id/Seek"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:iconifiedByDefault="false"
+        android:paddingLeft="-15dp"
+        android:queryHint="Введите ингредиент"
+        android:searchHintIcon="@null" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@android:color/holo_blue_dark"
-        android:dividerHeight="1dp"
-        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft">
+        android:layout_below="@id/Seek">
 
-    </ExpandableListView>
+        <ExpandableListView
+
+            android:id="@+id/expListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/holo_blue_dark"
+            android:dividerHeight="1dp"
+            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft">
+
+        </ExpandableListView>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/FindButton"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="450dp"
-        android:text="@string/Find" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/ToListOfIngr" />
 
 </RelativeLayout>

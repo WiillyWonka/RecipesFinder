@@ -11,4 +11,17 @@
     <string name="ChangeBolt">Поменять шрифт</string>
     <string name="ChangeBackGr">Поменять фон</string>
     <string name="ChangeTheme">Поменять тему</string>
+    <string name="thanks">Создано с помощью: https://finecooking.ru/</string>
+    <string name="add_recipe">Добавить рецепт</string>
+    <string name="instructions">Заполните все поля</string>
+    <string name="SaveRecipe">Сохранить</string>
+    <string name="addingr">+</string>
+    <string name="NameRecipe">Введите название рецепта</string>
+    <string name="NameIngredient">Введите название ингредиента</string>
+    <string name="NameStep">Введите текст шага</string>
+    <string name="DeleteIngredient">X</string>
+    <string name="CategoryName">Введите категорию (Десерт, Салат и т.д.)</string>
+    <string name="ToListOfIngr">К списку ингредиентов</string>
+    <string name="DeleteIngr">Удалить</string>
+    <string name="Cancel">Отмена</string>
 </resources>
