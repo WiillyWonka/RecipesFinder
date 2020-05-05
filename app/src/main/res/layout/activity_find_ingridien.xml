@@ -36,10 +36,9 @@
 
     <Button
         android:id="@+id/FindButton"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="450dp"
-        android:text="@string/Find" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/ToListOfIngr" />
 
 </RelativeLayout>
