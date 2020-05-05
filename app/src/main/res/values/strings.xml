@@ -21,5 +21,7 @@
     <string name="NameStep">Введите текст шага</string>
     <string name="DeleteIngredient">X</string>
     <string name="CategoryName">Введите категорию (Десерт, Салат и т.д.)</string>
-
+    <string name="ToListOfIngr">К списку ингредиентов</string>
+    <string name="DeleteIngr">Удалить</string>
+    <string name="Cancel">Отмена</string>
 </resources>
