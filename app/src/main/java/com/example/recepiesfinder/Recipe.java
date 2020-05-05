@@ -5,7 +5,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -48,7 +50,32 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
         CheckBt.setOnClickListener(this);
 
         MenuBt = (Button)findViewById(R.id.Menu);
-        MenuBt.setOnClickListener(this);
+        MenuBt.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder a_builder = new AlertDialog.Builder(Recipe.this);
+                        a_builder.setMessage("Вы действительно хотите выйти в Меню?")
+                                .setCancelable(false)
+                                .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Recipe.this.finish();
+                                        Intent intent = new Intent(Recipe.this, MainActivity.class);
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert = a_builder.create();
+                        alert.show();
+                    }
+                }
+        );
 
         Button name_rec = new Button(this);
         name_rec.setText(dish.getName());
@@ -166,6 +193,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
         linearLayout = findViewById(R.id.MainL);
 
         SetButtons();
+
         
         ImageView imageView = findViewById(R.id.Recipe_image);
 

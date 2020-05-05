@@ -1,6 +1,8 @@
 package com.example.recepiesfinder;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -37,7 +39,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
     private String[] names_;
     private String[] urls_;
     Button MenuBt;
-    Button AddReipeBt;
+    Button AddRecipeBt;
 
     public DisplayListOfDishesActivity(){}
 
@@ -99,11 +101,10 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
             String name_ = arguments.getString("class_name");
             if(name_.equals("my_recipes")){
                 setContentView(R.layout.activity_my_recipes);
-                AddReipeBt = (Button)findViewById(R.id.add_recipe);
-                AddReipeBt.setOnClickListener(this);
+                AddRecipeBt = (Button)findViewById(R.id.add_recipe);
+                AddRecipeBt.setOnClickListener(this);
                 MenuBt = (Button) findViewById(R.id.Menu);
                 MenuBt.setOnClickListener(this);
-                Button AddRecipeBt_ = (Button)findViewById(R.id.add_recipe);
 
                 DataBase db = DataBase.getDataBase(this);
                 sharedPreferences = getSharedPreferences("user.recipes.id", Context.MODE_PRIVATE);
@@ -113,7 +114,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
 
                 if(list_of_dishes_.length == 0){
                     TextView text = (TextView)findViewById(R.id.TextRec);
-                    text.setText("Nothing Here");
+                    text.setText("Ничего нет, добавьте свой рецепт!");
                     text.setTextSize(20);
                 }else{
                     int j = 0;
@@ -194,7 +195,32 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
             if (name_.equals(FindIngredient.class.getName())){
                 setContentView(R.layout.activity_list_of_dishes);
                 MenuBt = (Button) findViewById(R.id.Menu);
-                MenuBt.setOnClickListener(this);
+                MenuBt.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                AlertDialog.Builder a_builder = new AlertDialog.Builder(DisplayListOfDishesActivity.this);
+                                a_builder.setMessage("Вы действительно хотите сделать сброс ингрединетов и выйти в Меню?")
+                                        .setCancelable(false)
+                                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                DisplayListOfDishesActivity.this.finish();
+                                                Intent intent = new Intent(DisplayListOfDishesActivity.this, MainActivity.class);
+                                                startActivity(intent);
+                                            }
+                                        })
+                                        .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                                AlertDialog alert = a_builder.create();
+                                alert.show();
+                            }
+                        }
+                );
                 ArrayList<String> dishes_ = getIntent().getStringArrayListExtra("list");
                 if (dishes_ != null) {
                     String[] ingredients = dishes_.toArray(new String[dishes_.size()]);
