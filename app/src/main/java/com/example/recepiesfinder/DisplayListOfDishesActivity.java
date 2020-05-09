@@ -131,7 +131,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             String selection = mAdapter.getString(position);
-                            Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(view.getContext(), Recipe.class);
                             intent.putExtra("user", list_of_dishes_[position]);
                             startActivityForResult(intent, 1);
@@ -163,7 +163,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String selection = mAdapter.getString(position);
-                        Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(view.getContext(), Recipe.class);
                         intent.putExtra("favourites", list_of_dishes_[position]);
                         startActivityForResult(intent, 1);
@@ -185,7 +185,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String selection = mAdapter.getString(position);
-                        Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(view.getContext(), Recipe.class);
                         intent.putExtra(Dish.class.getSimpleName(), list_of_dishes_[position]);
                         startActivity(intent);
@@ -235,7 +235,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 String selection = mAdapter.getString(position);
-                                Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
+                                //Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(view.getContext(), Recipe.class);
                                 intent.putExtra(Dish.class.getSimpleName(), list_of_dishes_[position]);
                                 startActivity(intent);
