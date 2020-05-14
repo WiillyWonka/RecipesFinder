@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.recepiesfinder">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,17 +13,30 @@
         android:roundIcon="@drawable/ic_logo1"
         android:supportsRtl="true"
         android:theme="@style/MyStyle">
-
-        <activity android:name=".Recipe" />
-        <activity android:name=".Help" />
-        <activity android:name=".AlphabetForIngredients" />
-        <activity android:name=".AlphabetForRecepies" />
-        <activity android:name=".AllRecipes" />
-        <activity android:name=".FindIngredient" />
-        <activity android:name=".Settings" />
-        <activity android:name=".DisplayListOfDishesActivity" />
-        <activity android:name=".ListOfSelectedIngredients" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Recipe"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".Help"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".FindIngredient"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".Settings"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".DisplayListOfDishesActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".ListOfSelectedIngredients"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".UserRecipe"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -50,7 +50,7 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
 
     String item = "";
 
-    String[] categories_ = {"Выберите категорию из списка","Первые блюда","Вторые блюда","Закуски","Салаты","Соусы, кремы","Напитки","Десерты","Выпечка","Безглютеновая выпечка","Торты","Пасха"};
+    String[] categories_ = {"Выберите категорию из списка","Первые блюда","Вторые блюда","Закуски","Салаты","Десерты","Выпечка","Торты","Блюда в мультиварке","Блины и оладьи"};
 
     HashMap<Integer,LinearLayout> layouts_with_ingredients = new HashMap<Integer, LinearLayout>();
     HashMap<Integer, LinearLayout> layouts_with_steps= new HashMap<Integer, LinearLayout>();
@@ -142,7 +142,7 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
         EditText defStep = new EditText(this);
         defStep.setLayoutParams(lp_for_nested_view_components1);
         defStep.setId(count_of_steps_);
-        defStep.setHint("Введите текст шага");
+        defStep.setHint("Введите текст шага рецепта");
         list_with_names_steps.put(defStep.getId(),defStep);
 
         LinearLayout nested_for_steps = new LinearLayout(this);
