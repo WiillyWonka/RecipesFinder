@@ -176,12 +176,6 @@ public class DataBase {
         if (cursor.moveToFirst() && cursor.getInt(ID) > 0) {
             dish = new Dish[cursor.getCount()];
             for (int i = 0; i < dish.length; i++) {
-                int k = cursor.getInt(ID);
-                String n = cursor.getString(DISH_NAME);
-                n = cursor.getString(INGREDIENTS);
-                n = cursor.getString(DISH_PHOTO);
-                n = cursor.getString(CATEGORY);
-                n = cursor.getString(STEPS);
                 dish[i] = new Dish(
                         cursor.getInt(ID),
                         cursor.getString(DISH_NAME),
@@ -199,16 +193,6 @@ public class DataBase {
         return dish;
     }
 
-    public boolean getMatching(String ingredient) {
-        Cursor cursor = mDb.rawQuery("SELECT * FROM " +
-                "ingredients_matching " +
-                "join ingredients " +
-                "on ingredients.ingredient_id = ingredients_matching.ingredient_id " +
-                "WHERE ingredient_name = \"" + ingredient + "\"", null);
-
-        return cursor.getCount() > 0;
-    }
-
     public Dish[] getAllDishList() {
         String query = "SELECT dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name), dishes.dish_id " +
                 "from dishes " +
@@ -223,7 +207,45 @@ public class DataBase {
         return getDishByQuery(query);
     }
 
-    public Dish[] getDishListByIngredients(@NotNull String[] ingredients) {
+    public Dish[] getDishListByCategories(String[] categories) {
+        String query = "(";
+        for (String category : categories) {
+            query +="\'" + category + "\'" + ", ";
+        }
+
+        query = query.substring(0, query.length() - 2);
+
+        query += ")";
+
+        query = "select dish_name, dish_photo, dish_steps, tb.category_name, group_concat(ingredients.ingredient_name), tb.dish_id " +
+                "from ( " +
+                "  select * " +
+                "  from categories " +
+                "  join dishes " +
+                "  on categories.category_id = dishes.category_id " +
+                "  where categories.category_name = " + query +
+                ") tb " +
+                "join categories " +
+                "on tb.category_id = categories.category_id " +
+                "join ingredients_matching " +
+                "on tb.dish_id = ingredients_matching.dish_id " +
+                "join ingredients " +
+                "on ingredients.ingredient_id = ingredients_matching.ingredient_id " +
+                "GROUP BY (tb.dish_name)";
+
+        return getDishByQuery(query);
+    }
+
+    public Dish[][] getDishListByIngredients(@NotNull String[] ingredients) {
+        final int DISH_NAME = 0;
+        final int DISH_PHOTO = 1;
+        final int STEPS = 2;
+        final int CATEGORY = 3;
+        final int INGREDIENTS = 4;
+        final int ID = 5;
+        final int CAPACITY = 6;
+        final int PLACES = 3;
+
         String query = "(";
         for (String ingredient : ingredients) {
             query +="\'" + ingredient + "\'" + ", ";
@@ -233,19 +255,20 @@ public class DataBase {
 
         query += ")";
 
-        query = "select dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name), tb.dish_id " +
-                "from ( " +
+        query = "select dish_name, dish_photo, dish_steps, category_name, group_concat(ingredients.ingredient_name), " +
+                "tb.dish_id, cast(tb.number as real) / cast(count(ingredients.ingredient_name) as real) as capacity " +
+                "from (" +
                 "  select count(dish_name) as number, dishes.* " +
-                "from ingredients ing " +
-                "join ingredients_matching " +
-                "on ing.ingredient_id = ingredients_matching.ingredient_id " +
-                "JOIN dishes " +
-                "on dishes.dish_id = ingredients_matching.dish_id " +
-                "WHERE ing.ingredient_name in " + query +
-                " AND ing.ingredient_prior = 1 " +
-                "GROUP BY (dish_name) " +
-                "ORDER by count(dish_name) DESC " +
-                "  ) tb " +
+                "  from ingredients ing " +
+                "  join ingredients_matching " +
+                "  on ing.ingredient_id = ingredients_matching.ingredient_id " +
+                "  JOIN dishes " +
+                "  on dishes.dish_id = ingredients_matching.dish_id " +
+                "  WHERE ing.ingredient_name in " + query +
+                "  AND ing.ingredient_prior = 1 " +
+                "  GROUP BY (dish_name) " +
+                "  ORDER by count(dish_name) DESC " +
+                ") tb " +
                 "join categories " +
                 "on tb.category_id = categories.category_id " +
                 "join ingredients_matching " +
@@ -253,9 +276,67 @@ public class DataBase {
                 "join ingredients " +
                 "on ingredients.ingredient_id = ingredients_matching.ingredient_id " +
                 "GROUP BY (tb.dish_name) " +
-                "ORDER by number DESC ";
+                "ORDER by capacity DESC ";
 
-        return getDishByQuery(query);
+        Cursor cursor = mDb.rawQuery(query, null);
+
+        Dish[][] dish = null;
+
+        if (cursor.moveToFirst() && cursor.getInt(ID) > 0) {
+            dish = new Dish[PLACES + 1][];
+            double capacity = -1;
+            int pos = -1;
+            int place_holder_number = 0;
+
+            for (int i = 0; i < PLACES; i++) {
+                if (!cursor.isAfterLast()) {
+                    capacity = cursor.getDouble(CAPACITY);
+                    pos = cursor.getPosition();
+
+                    place_holder_number = 1;
+                    while (cursor.moveToNext() && cursor.getDouble(CAPACITY) == capacity) {
+                        place_holder_number++;
+                    }
+
+                    cursor.moveToPosition(pos);
+
+                    dish[i] = new Dish[place_holder_number];
+                    for (int j = 0; j < place_holder_number; j++) {
+                        dish[i][j] = new Dish(
+                                cursor.getInt(ID),
+                                cursor.getString(DISH_NAME),
+                                cursor.getString(INGREDIENTS),
+                                cursor.getString(DISH_PHOTO),
+                                cursor.getString(CATEGORY),
+                                cursor.getString(STEPS)
+                        );
+                        cursor.moveToNext();
+                    }
+                }
+                else {
+                    return dish;
+                }
+            }
+
+
+            dish[PLACES] = new Dish[cursor.getCount() - cursor.getPosition()];
+            for (int i = 0; !cursor.isAfterLast(); i++) {
+                int k = cursor.getInt(ID);
+                dish[PLACES][i] = new Dish(
+                        cursor.getInt(ID),
+                        cursor.getString(DISH_NAME),
+                        cursor.getString(INGREDIENTS),
+                        cursor.getString(DISH_PHOTO),
+                        cursor.getString(CATEGORY),
+                        cursor.getString(STEPS)
+                );
+                cursor.moveToNext();
+            }
+        }
+
+        cursor.close();
+
+        return dish;
     }
 
     public Dish getDishById(Integer id) {
@@ -272,5 +353,27 @@ public class DataBase {
         Dish[] dishes = getDishByQuery(query);
 
         return dishes == null ? null : dishes[0];
+    }
+
+    public void Test(Integer id) {
+        String query = "SELECT * " +
+                "from dishes " +
+                "join categories " +
+                "on dishes.category_id = categories.category_id " +
+                "join ingredients_matching " +
+                "on dishes.dish_id = ingredients_matching.dish_id " +
+                "join ingredients "  +
+                "on ingredients.ingredient_id = ingredients_matching.ingredient_id " +
+                "where dishes.dish_id = " + id.toString();
+
+        Cursor cursor = mDb.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            Object[] arr = new Object[cursor.getCount()];
+            int i = 0;
+            while(!cursor.isAfterLast()) {
+                arr[i] = cursor.getString(i);
+            }
+        }
     }
 }
