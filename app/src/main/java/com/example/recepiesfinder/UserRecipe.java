@@ -166,7 +166,9 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
             for (int key : list_with_names_ingredients.keySet()) {
                 count--;
                 if (!list_with_names_ingredients.get(key).getText().toString().equals("")) {
-                    ingredients += list_with_names_ingredients.get(key).getText().toString();
+                    char[] c = list_with_names_ingredients.get(key).getText().toString().toCharArray();
+                    c[0] = Character.toUpperCase(c[0]);
+                    ingredients += new String(c);
                     if (count != 0) {
                         ingredients += ',';
                     }
@@ -179,7 +181,9 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
                 for (int key : list_with_names_ingredients.keySet()) {
                     if (!list_with_names_ingredients.get(key).getText().toString().equals("")){
                         count--;
-                        ingredients += list_with_names_ingredients.get(key).getText().toString();
+                        char[] c = list_with_names_ingredients.get(key).getText().toString().toCharArray();
+                        c[0] = Character.toUpperCase(c[0]);
+                        ingredients += new String(c);
                         if (count != 0) {
                             ingredients += ',';
                         }
@@ -276,10 +280,6 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
         ingredients_list_from_db = db.getIngredientsList();
 
 
-        Dish[] dishes = db.getAllDishList();
-
-        count_of_dishes = dishes.length + 1;
-
 
         Create_Buttons();
         Create_Layouts();
@@ -331,7 +331,7 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
         if(id == DIALOG_SAVE){
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             adb.setTitle("Вы точно хотите сохранить рецепт?");
-            adb.setMessage("Вы можете сохранить рецепт или остаться и преверить/отредактировать введенные данные");
+            adb.setMessage("Вы можете сохранить рецепт или остаться и проверить/отредактировать введенные данные");
             adb.setPositiveButton("Сохранить",myClickListener2);
             adb.setNegativeButton("Редактировать", myClickListener2);
             return adb.create();
@@ -380,10 +380,10 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
                 case Dialog.BUTTON_POSITIVE:
                     dish = Save_User_Recipe();
                     if(dish!=null){
+                        long c = db.saveDish(dish);
                         SharedPreferences sharedPreferences = getSharedPreferences("user.recipes.id", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putInt(String.valueOf(dish.getId()),dish.getId()).apply();
-                        db.saveDish(dish);
+                        editor.putLong(String.valueOf(c), c).apply();
                         bring_data_back();
                     }
                     break;
