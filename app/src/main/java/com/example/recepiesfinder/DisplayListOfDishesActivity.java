@@ -108,6 +108,8 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
 
                 DataBase db = DataBase.getDataBase(this);
                 sharedPreferences = getSharedPreferences("user.recipes.id", Context.MODE_PRIVATE);
+                //SharedPreferences.Editor editor = sharedPreferences.edit();
+                //editor.clear().apply();
                 Map<String, ?> map = sharedPreferences.getAll();
                 Set<String> str_of_fav = map.keySet();
                 list_of_dishes_ = new Dish[str_of_fav.size()];
@@ -119,7 +121,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                 }else{
                     int j = 0;
                     for (String key : str_of_fav){
-                        list_of_dishes_[j] = db.getDishById(Objects.requireNonNull((Integer)(map.get(key))));
+                        list_of_dishes_[j] = db.getDishById((int)(long) Objects.requireNonNull(map.get(key)));
                         j++;
                     }
                     ConvertToStrings();

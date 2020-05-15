@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import com.bumptech.glide.Glide;
 
 
 public class Recipe extends AppCompatActivity implements View.OnClickListener{
+
     private Button MenuBt;
     private ImageButton CheckBt;
     private ViewGroup.LayoutParams lp;
@@ -39,6 +41,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
     private String[] text;
     private static Dish dish;
 
+    final int DELETE_RECIPE = 1;
     private boolean come_from_favorites = false;
     private boolean come_from_user_recipe = false;
 
@@ -203,15 +206,59 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
                 .error(R.drawable.ic_logo1)
                 .into(imageView);
 
+        if(come_from_user_recipe) {
+            CheckBt.setImageDrawable(getResources().getDrawable(R.drawable.brush));
+        }
+
         PrintIngredients();
         SetSteps(dish.getCount_steps(),come_from_user_recipe);
 
         sharedPreferences = getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
-        if(sharedPreferences.contains(String.valueOf(dish.getId()))){
+        if(sharedPreferences.contains(String.valueOf(dish.getId())) && !come_from_user_recipe){
             CheckBt.setImageDrawable(getResources().getDrawable(R.drawable.star_86960));
         }
 
     }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if(id == DELETE_RECIPE){
+            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+            adb.setTitle("Удалить рецепт");
+            adb.setMessage("Вы точно хотите удалить созданный вами рецепт?");
+            adb.setPositiveButton("Удалить", myClickListener);
+            adb.setNegativeButton("Отмена", myClickListener);
+            return adb.create();
+        }
+        return super.onCreateDialog(id);
+    }
+
+    DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case Dialog.BUTTON_POSITIVE:
+                    DeleteRecipe();
+                    bringDataBack(true);
+                    finish();
+                    break;
+                case Dialog.BUTTON_NEGATIVE:
+                    break;
+            }
+        }
+    };
+
+    private void DeleteRecipe(){
+        sharedPreferences = getSharedPreferences("user.recipes.id", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(String.valueOf(dish.getId())).apply();
+
+        DataBase db = DataBase.getDataBase(this);
+        db.deleteDish(dish.getId());
+        dish = null;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -253,20 +300,24 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
                 startActivity(intent);
                 break;
             case R.id.ImgBt:
-                sharedPreferences = getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
-                    if(!sharedPreferences.contains(String.valueOf(dish.getId()))){
+                if(!come_from_user_recipe) {
+                    sharedPreferences = getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
+                    if (!sharedPreferences.contains(String.valueOf(dish.getId()))) {
                         CheckBt.setImageDrawable(getResources().getDrawable(R.drawable.star_86960));
                         addrec(this);
-                        if(come_from_favorites){
+                        if (come_from_favorites) {
                             bringDataBack(false);
                         }
-                    }else{
+                    } else {
                         CheckBt.setImageDrawable(getResources().getDrawable(R.drawable.star_47680));
                         remove(this);
-                        if(come_from_favorites){
+                        if (come_from_favorites) {
                             bringDataBack(true);
                         }
                     }
+                }else{
+                    showDialog(DELETE_RECIPE);
+                }
                 break;
         }
     }
