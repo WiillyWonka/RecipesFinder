@@ -24,4 +24,18 @@
     <string name="ToListOfIngr">К списку ингредиентов</string>
     <string name="DeleteIngr">Удалить</string>
     <string name="Cancel">Отмена</string>
+    <string name="Categories">Категории</string>
+    <string-array name="categories">
+        <item>Все категории</item>
+        <item>Первые блюда</item>
+        <item>Вторые блюда</item>
+        <item>Закуски</item>
+        <item>Салаты</item>
+        <item>Десерты</item>
+        <item>Выпечка</item>
+        <item>Торты</item>
+        <item>Блюда в мультиварке</item>
+        <item>Блины и оладьи</item>
+    </string-array>
+    <string name="Hint">Нажмите на ингредиент и удерживайте для его удаления</string>
 </resources>

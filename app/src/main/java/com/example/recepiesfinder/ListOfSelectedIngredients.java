@@ -33,6 +33,9 @@ public class ListOfSelectedIngredients extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_indredients);
+        Toast toast = Toast.makeText(getApplicationContext(),
+                getResources().getString(R.string.Hint), Toast.LENGTH_LONG);
+        toast.show();
         ListView lv = (ListView) findViewById(R.id.listView);
         Bundle arguments = getIntent().getExtras();
         if (arguments != null) {
