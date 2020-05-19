@@ -7,16 +7,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -36,8 +41,10 @@ import java.util.Set;
 
 public class DisplayListOfDishesActivity extends AppCompatActivity implements  View.OnClickListener {
     private Dish[] list_of_dishes_;
+    private Dish[][] list_of_selected_dishes_;
     private String[] names_;
     private String[] urls_;
+    private ArrayList<Integer> sizes_ = new ArrayList<>();
     Button MenuBt;
     Button AddRecipeBt;
 
@@ -90,12 +97,18 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
 
 
     private DishAdapter mAdapter;
+    private Spinner spinner;
     SharedPreferences sharedPreferences;
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+
         Bundle arguments = getIntent().getExtras();
         if (arguments != null){
             String name_ = arguments.getString("class_name");
@@ -106,14 +119,13 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                 MenuBt = (Button) findViewById(R.id.Menu);
                 MenuBt.setOnClickListener(this);
 
-                DataBase db = DataBase.getDataBase(this);
+
+
                 sharedPreferences = getSharedPreferences("user.recipes.id", Context.MODE_PRIVATE);
-                //SharedPreferences.Editor editor = sharedPreferences.edit();
-                //editor.clear().apply();
                 Map<String, ?> map = sharedPreferences.getAll();
                 Set<String> str_of_fav = map.keySet();
                 list_of_dishes_ = new Dish[str_of_fav.size()];
-
+                DataBase db = DataBase.getDataBase(this);
                 if(list_of_dishes_.length == 0){
                     TextView text = (TextView)findViewById(R.id.TextRec);
                     text.setText("Ничего нет, добавьте свой рецепт!");
@@ -146,13 +158,48 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                 setContentView(R.layout.activity_list_of_dishes);
                 MenuBt = (Button) findViewById(R.id.Menu);
                 MenuBt.setOnClickListener(this);
-                DataBase db = DataBase.getDataBase(this);
+
+                spinner = (Spinner)findViewById(R.id.spinner);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    public void onItemSelected(AdapterView<?> parent,
+                                               View itemSelected, int position, long id) {
+                        String item = spinner.getSelectedItem().toString();
+                        ArrayList<Dish> list_dishes = new ArrayList<>();
+                        ArrayList<Dish> new_list = new ArrayList<>();
+                        sharedPreferences = getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
+                        Map<String, ?> map = sharedPreferences.getAll();
+                        Set<String> str_of_fav = map.keySet();
+                        for (String key : str_of_fav){
+                            DataBase db = DataBase.getDataBase(DisplayListOfDishesActivity.this);
+                            list_dishes.add(db.getDishById(Objects.requireNonNull((Integer)(map.get(key)))));
+                        }
+                        if (!item.equals(getResources().getStringArray(R.array.categories)[0])) {
+                            for (Dish dish : list_dishes) {
+                                if (dish.getCategory().equals(item)){
+                                    new_list.add(dish);
+                                }
+                            }
+                        } else {
+                            new_list = (ArrayList<Dish>) list_dishes.clone();
+                        }
+                        list_of_dishes_ = new_list.toArray(new Dish[new_list.size()]);
+                        ConvertToStrings();
+                        DownloadURLS();
+                        mAdapter = new DishAdapter(DisplayListOfDishesActivity.this);
+                        ListView listView = (ListView)findViewById(R.id.lvMain);
+                        listView.setAdapter(mAdapter);
+                    }
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
+
                 sharedPreferences = getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
                 Map<String, ?> map = sharedPreferences.getAll();
                 Set<String> str_of_fav = map.keySet();
                 list_of_dishes_ = new Dish[str_of_fav.size()];
                 int j = 0;
                 for (String key : str_of_fav){
+                    DataBase db = DataBase.getDataBase(this);
                     list_of_dishes_[j] = db.getDishById(Objects.requireNonNull((Integer)(map.get(key))));
                     j++;
                 }
@@ -172,10 +219,13 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                     }
                 });
             }
+
+            //ALL RECIPES HERE
             if (name_.equals(MainActivity.class.getName())) {
                 setContentView(R.layout.activity_list_of_dishes);
                 MenuBt = (Button) findViewById(R.id.Menu);
                 MenuBt.setOnClickListener(this);
+
                 DataBase db = DataBase.getDataBase(this);
                 list_of_dishes_ = db.getAllDishList();
                 ConvertToStrings();
@@ -187,13 +237,40 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String selection = mAdapter.getString(position);
-                        //Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(view.getContext(), Recipe.class);
                         intent.putExtra(Dish.class.getSimpleName(), list_of_dishes_[position]);
                         startActivity(intent);
                     }
                 });
+                spinner = (Spinner)findViewById(R.id.spinner);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent,
+                                               View itemSelected, int position, long id) {
+                        String item = spinner.getSelectedItem().toString();
+                        String[] items = new String[] {item};
+                        DataBase db = DataBase.getDataBase(DisplayListOfDishesActivity.this);
+                        if (item.equals(getResources().getStringArray(R.array.categories)[0])) {
+                            list_of_dishes_ = db.getAllDishList();
+                            ConvertToStrings();
+                            DownloadURLS();
+                            mAdapter = new DishAdapter(DisplayListOfDishesActivity.this);
+                            ListView listView = (ListView)findViewById(R.id.lvMain);
+                            listView.setAdapter(mAdapter);
+                        }else {
+                            list_of_dishes_ = db.getDishListByCategories(items);
+                            ConvertToStrings();
+                            DownloadURLS();
+                            mAdapter = new DishAdapter(DisplayListOfDishesActivity.this);
+                            ListView listView = (ListView)findViewById(R.id.lvMain);
+                            listView.setAdapter(mAdapter);
+                        }
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
             }
+            //RECIPES AFTER SELECTION
             if (name_.equals(FindIngredient.class.getName())){
                 setContentView(R.layout.activity_list_of_dishes);
                 MenuBt = (Button) findViewById(R.id.Menu);
@@ -223,11 +300,81 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                             }
                         }
                 );
+                spinner = (Spinner) findViewById(R.id.spinner);
+
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent,
+                                               View itemSelected, int position, long id) {
+                        String item = spinner.getSelectedItem().toString();
+                        if (item.equals(getResources().getStringArray(R.array.categories)[0])) {
+                            int common_size = 0;
+                            for (Dish[] dishes : list_of_selected_dishes_) {
+                                if (dishes != null) {
+                                    sizes_.add(dishes.length);
+                                    common_size += dishes.length;
+                                }
+                            }
+                            int j = 0;
+                            list_of_dishes_ = new Dish[common_size];
+                            for (Dish[] dishes : list_of_selected_dishes_) {
+                                if (dishes != null) {
+                                    for (Dish dish : dishes) {
+                                        list_of_dishes_[j] = dish;
+                                        j++;
+                                    }
+                                }
+                            }
+                                ConvertToStrings();
+                                DownloadURLS();
+                                mAdapter = new DishAdapter(DisplayListOfDishesActivity.this);
+                                ListView listView = (ListView)findViewById(R.id.lvMain);
+                                listView.setAdapter(mAdapter);
+
+                        } else {
+                            ArrayList<Dish> list_dishes = new ArrayList<>();
+                            for (Dish[] dishes : list_of_selected_dishes_) {
+                                if (dishes != null) {
+                                    for (Dish dish : dishes) {
+                                        if (dish.getCategory().equals(item)) {
+                                            list_dishes.add(dish);
+                                        }
+                                    }
+                                }
+                            }
+                            list_of_dishes_ = list_dishes.toArray(new Dish[list_dishes.size()]);
+                            ConvertToStrings();
+                            DownloadURLS();
+                            mAdapter = new DishAdapter(DisplayListOfDishesActivity.this);
+                            ListView listView = (ListView)findViewById(R.id.lvMain);
+                            listView.setAdapter(mAdapter);
+                        }
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
                 ArrayList<String> dishes_ = getIntent().getStringArrayListExtra("list");
                 if (dishes_ != null) {
                     String[] ingredients = dishes_.toArray(new String[dishes_.size()]);
                     DataBase db = DataBase.getDataBase(this);
-                    list_of_dishes_ = db.getDishListByIngredients(ingredients);
+                    list_of_selected_dishes_ = db.getDishListByIngredients(ingredients);
+                    int common_size = 0;
+                    for (Dish[] dishes : list_of_selected_dishes_) {
+                        if (dishes != null) {
+                            sizes_.add(dishes.length);
+                            common_size += dishes.length;
+                        }
+                    }
+                    int j = 0;
+                    list_of_dishes_ = new Dish[common_size];
+                    for (Dish[] dishes : list_of_selected_dishes_) {
+                        if (dishes != null) {
+                            for (Dish dish : dishes) {
+                                list_of_dishes_[j] = dish;
+                                j++;
+                            }
+                        }
+                    }
                     ConvertToStrings();
                     DownloadURLS();
                     mAdapter = new DishAdapter(this);
@@ -237,7 +384,6 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 String selection = mAdapter.getString(position);
-                                //Toast.makeText(view.getContext(), selection, Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(view.getContext(), Recipe.class);
                                 intent.putExtra(Dish.class.getSimpleName(), list_of_dishes_[position]);
                                 startActivity(intent);
@@ -321,6 +467,18 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
             TextView signTextView = (TextView) convertView.findViewById(R.id.textViewRecipe);
             signTextView.setText(names_[position]);
 
+            ImageView imageMedal = (ImageView) convertView.findViewById(R.id.imageMedal);
+            if (!sizes_.isEmpty()) {
+                if (position < sizes_.get(0)) {
+                    imageMedal.setImageResource(R.drawable.first_place);
+                } else if (sizes_.size() >= 2 &&  position < sizes_.get(1) + sizes_.get(0)) {
+                    imageMedal.setImageResource(R.drawable.second_place);
+                } else if (sizes_.size() >= 3 && position < sizes_.get(2) + sizes_.get(1) + sizes_.get(0)) {
+                    imageMedal.setImageResource(R.drawable.third_place);
+                } else {
+                    imageMedal.setImageResource(R.color.for_buttons);
+                }
+            }
             return convertView;
         }
         String getString(int position) {
