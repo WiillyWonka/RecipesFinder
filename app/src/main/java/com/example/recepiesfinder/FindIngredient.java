@@ -5,23 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,14 +25,13 @@ public class FindIngredient extends AppCompatActivity {
     protected ListAdapter expListAdapter;
     protected List<String> expListTitle;
     protected HashMap<String, List<String>> expListDetail = new HashMap<>();
-    protected CheckBox mCheck;
-    protected TextView mTextView;
     protected ArrayList<String> FindList = new ArrayList<>();
+    protected SearchView sV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_ingridien);
+        setContentView(R.layout.activity_find_ingredien);
         expListView = (ExpandableListView) findViewById(R.id.expListView);
 
         List<String> ActiveList= new ArrayList<>();
@@ -61,29 +55,7 @@ public class FindIngredient extends AppCompatActivity {
         expListAdapter = new ListAdapter(this, expListTitle, expListDetail);
 
         expListView.setAdapter(expListAdapter);
-        expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                /*Toast.makeText(getApplicationContext(),
-                        expListTitle.get(groupPosition) + " Список раскрыт.",
-                        Toast.LENGTH_SHORT).show();*/
-
-            }
-        });
-
-
-
-        expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                /*Toast.makeText(getApplicationContext(),
-                        expListTitle.get(groupPosition) + " Список скрыт.",
-                        Toast.LENGTH_SHORT).show();*/
-                expListAdapter.notifyDataSetChanged();
-            }
-        });
 
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @SuppressLint({"ResourceAsColor", "ResourceType"})
@@ -123,16 +95,32 @@ public class FindIngredient extends AppCompatActivity {
                 }
             }
         });
-        SearchView sV = findViewById(R.id.Seek);
+        sV = findViewById(R.id.Seek);
+        sV.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         sV.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                sV.clearFocus();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 expListAdapter.filter(newText);
+
+                if (!newText.isEmpty()) {
+                    int g = expListTitle.indexOf(newText.substring(0, 1).toUpperCase());
+                    if (g != -1) {
+                        if (!expListView.isGroupExpanded(g)) {
+                            expListView.expandGroup(g, true);
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < expListTitle.size(); i++) {
+                        expListView.collapseGroup(i);
+                    }
+                    this.onQueryTextSubmit("");
+                }
                 return false;
             }
         });
@@ -143,22 +131,22 @@ public class FindIngredient extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        sV.clearFocus();
         if (data == null) {
             return;
         }
+        sV.setQuery("", false);
         ArrayList<String> renew_FindList = (ArrayList<String>)data.getStringArrayListExtra("list");
         if (renew_FindList != null && resultCode == RESULT_OK) {
             for (String name : FindList) {
                 if (!renew_FindList.contains(name)) {
                     expListAdapter.setMyCheck(name, !expListAdapter.getMyCheck(name));
-                    CheckBox cb = (CheckBox) findViewById(R.id.checkIng);
-                    cb.setChecked(expListAdapter.getMyCheck(name));
-                    cb.refreshDrawableState();
                     expListAdapter.notifyDataSetChanged();
                 }
             }
             FindList.clear();
             FindList = (ArrayList<String>) renew_FindList.clone();
+
             //FindIngredient.this.onRestart();
         }
     }
