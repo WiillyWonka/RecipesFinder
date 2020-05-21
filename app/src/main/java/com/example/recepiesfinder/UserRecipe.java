@@ -45,6 +45,8 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
     final int DIALOG_SAVE = 4;
     final int DIALOG_EMPTY_CATEGORY = 5;
 
+    int num_of_theme = 1;
+
     int count_of_ingredients_ = 0;
     int count_of_steps_ = 0;
 
@@ -89,8 +91,13 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
 
     private void Create_field_for_ingredient(){
         ImageButton DefaultBrushBt = new ImageButton(this);
-        DefaultBrushBt.setImageResource(R.drawable.brush);
-        DefaultBrushBt.setBackgroundColor(Color.parseColor("#ffffff"));
+        if(num_of_theme == 1) {
+            DefaultBrushBt.setImageResource(R.drawable.brush);
+            DefaultBrushBt.setBackgroundColor(Color.parseColor("#ffffff"));
+        }else{
+            DefaultBrushBt.setImageResource(R.drawable.brush1);
+            DefaultBrushBt.setBackgroundColor(getResources().getColor(R.color.my_background));
+        }
         DefaultBrushBt.setLayoutParams(lp_for_nested_view_components2);
         DefaultBrushBt.setId(count_of_ingredients_);
         DefaultBrushBt.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +110,9 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
         });
 
         AutoCompleteTextView defIngr = new AutoCompleteTextView(this);
+        if(num_of_theme == 2) {
+            defIngr.setHintTextColor(getResources().getColor(R.color.my_textColorPrimary));
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,ingredients_list_from_db);
         defIngr.setAdapter(adapter);
         defIngr.setLayoutParams(lp_for_nested_view_components1);
@@ -126,8 +136,13 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
     private void Create_field_for_step(){
 
         ImageButton DefaultBrushBt = new ImageButton(this);
-        DefaultBrushBt.setImageResource(R.drawable.brush);
-        DefaultBrushBt.setBackgroundColor(Color.parseColor("#ffffff"));
+        if(num_of_theme == 1) {
+            DefaultBrushBt.setImageResource(R.drawable.brush);
+            DefaultBrushBt.setBackgroundColor(Color.parseColor("#ffffff"));
+        }else{
+            DefaultBrushBt.setImageResource(R.drawable.brush1);
+            DefaultBrushBt.setBackgroundColor(getResources().getColor(R.color.my_background));
+        }
         DefaultBrushBt.setLayoutParams(lp_for_nested_view_components2);
         DefaultBrushBt.setId(count_of_steps_);
         DefaultBrushBt.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +155,9 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
         });
 
         EditText defStep = new EditText(this);
+        if(num_of_theme == 2) {
+            defStep.setHintTextColor(getResources().getColor(R.color.my_textColorPrimary));
+        }
         defStep.setLayoutParams(lp_for_nested_view_components1);
         defStep.setId(count_of_steps_);
         defStep.setHint("Введите текст шага рецепта");
@@ -269,11 +287,30 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
         }
     };
 
+    private void changeTheme(int num_){
+        if(num_ == 1){
+            setTheme(R.style.MyStyle);
+            num_of_theme = 1;
+        }else if(num_ == 2){
+            setTheme(R.style.MyStyle2);
+            num_of_theme = 2;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("theme.num",MODE_PRIVATE);
+        int theme = sharedPreferences.getInt("THEME",0);
+        changeTheme(theme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_params_user_recipe);
 
+        if(num_of_theme == 2) {
+            EditText editText = (EditText) findViewById(R.id.NameRecipe);
+            editText.setHintTextColor(getResources().getColor(R.color.my_textColorPrimary));
+        }
 
         db = DataBase.getDataBase(this);
 
@@ -289,9 +326,15 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
 
 
         Spinner spinner = (Spinner)findViewById(R.id.CategoryName);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,categories_);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner.setAdapter(adapter);
+        if( num_of_theme == 1) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories_);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+            spinner.setAdapter(adapter);
+        }else{
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_for_spinner, categories_);
+            adapter.setDropDownViewResource(R.layout.item_for_spinner);
+            spinner.setAdapter(adapter);
+        }
         spinner.setOnItemSelectedListener(itemSelectedListener);
 
     }

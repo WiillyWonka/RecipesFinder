@@ -1,10 +1,12 @@
 package com.example.recepiesfinder;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
@@ -28,10 +30,17 @@ public class FindIngredient extends AppCompatActivity {
     protected ArrayList<String> FindList = new ArrayList<>();
     protected SearchView sV;
 
+    int num_of_theme = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("theme.num",MODE_PRIVATE);
+        int theme = sharedPreferences.getInt("THEME",0);
+        changeTheme(theme);
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_ingredien);
+        setContentView(R.layout.activity_find_ingridien);
         expListView = (ExpandableListView) findViewById(R.id.expListView);
 
         List<String> ActiveList= new ArrayList<>();
@@ -96,6 +105,9 @@ public class FindIngredient extends AppCompatActivity {
             }
         });
         sV = findViewById(R.id.Seek);
+        if(num_of_theme == 2){
+            sV.setBackgroundColor(getResources().getColor(R.color.secondstuff));
+        }
         sV.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         sV.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -127,6 +139,16 @@ public class FindIngredient extends AppCompatActivity {
 
     }
 
+    private void changeTheme(int num_){
+        if(num_ == 1){
+            setTheme(R.style.MyStyle);
+            num_of_theme = 1;
+        }else if(num_ == 2){
+            setTheme(R.style.MyStyle2);
+            num_of_theme = 2;
+        }
+    }
+
     //changes HERE!!!
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -150,26 +172,5 @@ public class FindIngredient extends AppCompatActivity {
             //FindIngredient.this.onRestart();
         }
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu1,menu);
 
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.action_settings:
-                Intent intent2 = new Intent(this,Settings.class);
-                startActivity(intent2);
-                break;
-            case R.id.action_help:
-                Intent intent = new Intent(this,Help.class);
-                startActivity(intent);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

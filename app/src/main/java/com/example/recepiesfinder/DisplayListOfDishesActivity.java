@@ -48,6 +48,8 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
     Button MenuBt;
     Button AddRecipeBt;
 
+    int num_of_theme = 1;
+
     public DisplayListOfDishesActivity(){}
 
     public DisplayListOfDishesActivity(Dish[] dishes){
@@ -85,7 +87,7 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
         switch (id){
             case R.id.action_settings:
                 Intent intent2 = new Intent(this,Settings.class);
-                startActivity(intent2);
+                startActivityForResult(intent2,1);
                 break;
             case R.id.action_help:
                 Intent intent = new Intent(this,Help.class);
@@ -104,6 +106,11 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        sharedPreferences = getSharedPreferences("theme.num",MODE_PRIVATE);
+        int theme = sharedPreferences.getInt("THEME",0);
+        changeTheme(theme);
+
         super.onCreate(savedInstanceState);
 
 
@@ -160,6 +167,11 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                 MenuBt.setOnClickListener(this);
 
                 spinner = (Spinner)findViewById(R.id.spinner);
+                if(num_of_theme == 1){
+                    spinner.setBackgroundColor(getResources().getColor(R.color.my_colorPrimaryVariant));
+                }else if(num_of_theme == 2){
+                    spinner.setBackgroundColor(getResources().getColor(R.color.secondstuff));
+                }
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     public void onItemSelected(AdapterView<?> parent,
                                                View itemSelected, int position, long id) {
@@ -243,6 +255,11 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                     }
                 });
                 spinner = (Spinner)findViewById(R.id.spinner);
+                if(num_of_theme == 1){
+                    spinner.setBackgroundColor(getResources().getColor(R.color.my_colorPrimaryVariant));
+                }else if(num_of_theme == 2){
+                    spinner.setBackgroundColor(getResources().getColor(R.color.secondstuff));
+                }
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent,
@@ -301,7 +318,11 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                         }
                 );
                 spinner = (Spinner) findViewById(R.id.spinner);
-
+                if(num_of_theme == 1){
+                    spinner.setBackgroundColor(getResources().getColor(R.color.my_colorPrimaryVariant));
+                }else if(num_of_theme == 2){
+                    spinner.setBackgroundColor(getResources().getColor(R.color.secondstuff));
+                }
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent,
@@ -392,6 +413,16 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
                     });
                 }
             }
+        }
+    }
+
+    private void changeTheme(int num_){
+        if(num_ == 1){
+            setTheme(R.style.MyStyle);
+            num_of_theme = 1;
+        }else if(num_ == 2){
+            setTheme(R.style.MyStyle2);
+            num_of_theme = 2;
         }
     }
 
