@@ -20,8 +20,7 @@
             android:layout_weight="1"
             android:entries="@array/categories"
 
-            android:prompt="@string/Categories"
-            android:background="@color/my_background"/>
+            android:prompt="@string/Categories"/>
     </LinearLayout>
 
     <LinearLayout
