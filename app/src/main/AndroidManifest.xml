@@ -13,30 +13,42 @@
         android:roundIcon="@drawable/ic_logo1"
         android:supportsRtl="true"
         android:theme="@style/MyStyle">
-        <activity android:name=".Recipe"
+        <activity android:name=".PopActivity"
+            android:theme="@style/AppTheme.PopMe"
+            >
+        </activity>
+        <activity
+            android:name=".Recipe"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".Help"
+        <activity
+            android:name=".Help"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".FindIngredient"
+        <activity
+            android:name=".FindIngredient"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".Settings"
+        <activity
+            android:name=".Settings"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".DisplayListOfDishesActivity"
+        <activity
+            android:name=".DisplayListOfDishesActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ListOfSelectedIngredients"
+        <activity
+            android:name=".ListOfSelectedIngredients"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".UserRecipe"
+        <activity
+            android:name=".UserRecipe"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" >
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

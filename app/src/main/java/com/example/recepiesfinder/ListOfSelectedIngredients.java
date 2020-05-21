@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -29,8 +30,13 @@ public class ListOfSelectedIngredients extends AppCompatActivity {
     protected ArrayAdapter<String> mAdapter;
     private String selectedItem;
 
+    int num_of_theme = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sharedPreferences = getSharedPreferences("theme.num",MODE_PRIVATE);
+        int theme = sharedPreferences.getInt("THEME",0);
+        changeTheme(theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_indredients);
         Toast toast = Toast.makeText(getApplicationContext(),
@@ -95,6 +101,16 @@ public class ListOfSelectedIngredients extends AppCompatActivity {
         );
     }
 
+    private void changeTheme(int num_){
+        if(num_ == 1){
+            setTheme(R.style.MyStyle);
+            num_of_theme = 1;
+        }else if(num_ == 2){
+            setTheme(R.style.MyStyle2);
+            num_of_theme = 2;
+        }
+    }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -141,29 +157,6 @@ public class ListOfSelectedIngredients extends AppCompatActivity {
             default:
                 return super.onContextItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu1,menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.action_settings:
-                Intent intent2 = new Intent(this,Settings.class);
-                startActivity(intent2);
-                break;
-            case R.id.action_help:
-                Intent intent = new Intent(this,Help.class);
-                startActivity(intent);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
 
