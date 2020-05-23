@@ -119,7 +119,7 @@ public class PopActivity extends Activity{
         if(id == DIALOG_APPLY_THEME){
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             adb.setTitle("Подтвердите смену темы");
-            adb.setMessage("Если вы хотите изменить тему, то приложение автоматически перезамустится.\nВсе введенные данные удалятся.\nВы точно хотите сменить тему?");
+            adb.setMessage("Если вы хотите изменить тему, то приложение автоматически перезапустится.\nВсе введенные данные удалятся.\nВы точно хотите сменить тему?");
             adb.setPositiveButton("Сменить тему", myClickListener);
             adb.setNegativeButton("Отмена", myClickListener);
             return adb.create();
