@@ -103,19 +103,17 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
 
     private void SetSteps(int count, boolean user){
         text = dish.getSteps();
-        if(!user){
-            for(int i = 1; i<count-1;i++) {
-                if (i < count - 1) {
-                    Button bt = new Button(this);
-                    bt.setBackgroundResource(R.drawable.button_border);
-                    bt.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
-                    bt.setGravity(1);
-                    bt.setTextSize(14);
-                    bt.setText("Шаг " + i);
-                    bt.setLayoutParams(lp1);
-                    linearLayout.addView(bt);
-                }
-
+        for(int i = 0; i<count;i++) {
+            String test = text[i];
+            if(!test.equals("")) {
+                Button bt = new Button(this);
+                bt.setBackgroundResource(R.drawable.button_border);
+                bt.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
+                bt.setGravity(1);
+                bt.setTextSize(14);
+                bt.setText("Шаг " + (i + 1));
+                bt.setLayoutParams(lp1);
+                linearLayout.addView(bt);
                 TextView tv = new TextView(this);
                 tv.setText("\n" + text[i] + "\n");
 
@@ -123,28 +121,8 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
                 tv.setTextSize(17);
                 linearLayout.addView(tv);
             }
-        }else{
-            for(int i = 0; i<count;i++) {
-
-                String test = text[i];
-                if(!test.equals("")) {
-                    Button bt = new Button(this);
-                    bt.setBackgroundResource(R.drawable.button_border);
-                    bt.setTextColor(getResources().getColor(R.color.my_textColorPrimary));
-                    bt.setGravity(1);
-                    bt.setTextSize(14);
-                    bt.setText("Шаг " + (i + 1));
-                    bt.setLayoutParams(lp1);
-                    linearLayout.addView(bt);
-                    TextView tv = new TextView(this);
-                    tv.setText("\n" + text[i] + "\n");
-
-                    tv.setLayoutParams(lp);
-                    tv.setTextSize(17);
-                    linearLayout.addView(tv);
-                }
-            }
         }
+
     }
 
     private void PrintIngredients(){
@@ -224,11 +202,7 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
                 .into(imageView);
 
         if(come_from_user_recipe) {
-            if(num_of_theme == 1) {
-                CheckBt.setImageDrawable(getResources().getDrawable(R.drawable.brush));
-            }else{
-                CheckBt.setImageDrawable(getResources().getDrawable(R.drawable.brush1));
-            }
+            CheckBt.setImageDrawable(getResources().getDrawable(R.drawable.brush));
         }
 
         PrintIngredients();
