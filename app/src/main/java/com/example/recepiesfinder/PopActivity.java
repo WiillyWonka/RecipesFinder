@@ -148,7 +148,7 @@ public class PopActivity extends Activity{
     private void recreateApp(){
         sharedPreferences = getSharedPreferences("theme.num",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        num_of_theme = sharedPreferences.getInt("THEME",0);
+        num_of_theme = sharedPreferences.getInt("THEME",1);
         if(num_of_theme == 1) {
             editor.putInt("THEME", 2).apply();
         }else if(num_of_theme == 2){

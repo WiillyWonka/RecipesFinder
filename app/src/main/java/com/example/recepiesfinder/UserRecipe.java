@@ -393,23 +393,14 @@ public class UserRecipe extends AppCompatActivity implements View.OnClickListene
                 case Dialog.BUTTON_NEGATIVE:
                     break;
                 case Dialog.BUTTON_NEUTRAL:
-                    EditText Name_ = (EditText)findViewById(R.id.NameRecipe);
-                    if(Name_.getText().toString().equals("")){
-                        showDialog(DIALOG_EMPTY_NAME);
-                        break;
-                    }
                     dish = Save_User_Recipe();
                     if(dish!=null){
+                        long c = db.saveDish(dish);
                         SharedPreferences sharedPreferences = getSharedPreferences("user.recipes.id", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putInt(String.valueOf(dish.getId()),dish.getId()).apply();
-                        db.saveDish(dish);
+                        editor.putLong(String.valueOf(c), c).apply();
                         bring_data_back();
                         Go_to_menu();
-                        break;
-                    }else {
-                        showDialog(DIALOG_EMPTY_INGREDIENT_LIST);
-                        break;
                     }
             }
         }

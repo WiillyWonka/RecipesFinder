@@ -485,14 +485,21 @@ public class DisplayListOfDishesActivity extends AppCompatActivity implements  V
 
             ImageView imgView = (ImageView)convertView.findViewById(R.id.imageViewIcon);
 
-
-            Glide.with(DisplayListOfDishesActivity.this)
-                    .load(urls_[position])
-                    .placeholder(R.drawable.ic_logo1)
-                    .error(R.drawable.ic_logo1)
-                    .apply(new RequestOptions().override(100, 80))
-                    .into(imgView);
-
+            if(num_of_theme == 1) {
+                Glide.with(DisplayListOfDishesActivity.this)
+                        .load(urls_[position])
+                        .placeholder(R.drawable.ic_logo1)
+                        .error(R.drawable.ic_logo1)
+                        .apply(new RequestOptions().override(100, 80))
+                        .into(imgView);
+            }else if(num_of_theme == 2){
+                Glide.with(DisplayListOfDishesActivity.this)
+                        .load(urls_[position])
+                        .placeholder(R.drawable.logo_for_dark_theme)
+                        .error(R.drawable.logo_for_dark_theme)
+                        .apply(new RequestOptions().override(100, 80))
+                        .into(imgView);
+            }
 
 
             TextView signTextView = (TextView) convertView.findViewById(R.id.textViewRecipe);

@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
 
         SharedPreferences sharedPreferences = getSharedPreferences("theme.num",MODE_PRIVATE);
-        int theme = sharedPreferences.getInt("THEME",0);
+        int theme = sharedPreferences.getInt("THEME",1);
         changeTheme(theme);
 
         super.onCreate(savedInstanceState);

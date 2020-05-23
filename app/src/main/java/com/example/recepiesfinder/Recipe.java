@@ -195,11 +195,19 @@ public class Recipe extends AppCompatActivity implements View.OnClickListener{
 
         ImageView imageView = findViewById(R.id.Recipe_image);
 
-        Glide.with(Recipe.this)
-                .load(dish.getPicture())
-                .placeholder(R.drawable.ic_logo1)
-                .error(R.drawable.ic_logo1)
-                .into(imageView);
+        if(num_of_theme == 1) {
+            Glide.with(Recipe.this)
+                    .load(dish.getPicture())
+                    .placeholder(R.drawable.ic_logo1)
+                    .error(R.drawable.ic_logo1)
+                    .into(imageView);
+        }else if(num_of_theme == 2){
+            Glide.with(Recipe.this)
+                    .load(dish.getPicture())
+                    .placeholder(R.drawable.logo_for_dark_theme)
+                    .error(R.drawable.logo_for_dark_theme)
+                    .into(imageView);
+        }
 
         if(come_from_user_recipe) {
             CheckBt.setImageDrawable(getResources().getDrawable(R.drawable.brush));
